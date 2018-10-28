@@ -114,7 +114,11 @@ class Figure():
         last = kwargs.get('last', None)
         candles = self.candles[-last:] if last else self.candles
         o = candles[0].open_price
-        c = candles[-1].close_price
+        try:
+            c = candles[-1].close_price
+        except:
+            print(candles)
+            input()
         h = max([cn.high_price for cn in candles])
         l = min([cn.low_price for cn in candles])
         return Candle(open=o, high=h, low=l, close=c)

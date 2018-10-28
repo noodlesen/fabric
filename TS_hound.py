@@ -99,7 +99,7 @@ def open(cc, f, symbol, trades, params):
                 open_reason = 'TAIL_BUY'
 
 
-        if f.pointer > 5:
+        if f.pointer > 50:
 
             # BREAKUP
             if params.get('open_BREAK', False):
