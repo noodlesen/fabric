@@ -70,6 +70,12 @@ def manage(cc, f, symbol, trades, params):
                     nsl = trade.stoploss*ptf+cc.low_price*(1-ptf)
                     pull = True
 
+            if params.get('use_PTC2', False):
+                ptf = params.get('ptc2_mix', 0.25)
+                if CCI(f.last(symbol, 2)) < CCI(f.last(symbol, 2, -1)):
+                    nsl = trade.stoploss*ptf+cc.low_price*(1-ptf)
+                    pull = True
+
             if pull:
                 if nsl > trade.stoploss:
                     trade.stoploss = nsl
@@ -129,6 +135,12 @@ def open(cc, f, symbol, trades, params):
                     has_buy_signal = True
                     open_reason = 'FRAC_BUY'
 
+            #C2
+            if params.get('open_C2', False):
+                if CCI(f.last(symbol, 2)) > CCI(f.last(symbol, 2, -1)):
+                    has_buy_signal = True
+                    open_reason = 'C2_BUY'
+
 
         passed_filters = []
 
@@ -142,6 +154,13 @@ def open(cc, f, symbol, trades, params):
                 if cc.close_price > m*th:
                     high_filter_passed = 1
             passed_filters.append(high_filter_passed)
+
+        if params.get('use_CCI_FILTER', False):
+            cci_filter_passed = 0
+            per = params.get('cci_f_per', 14)
+            if CCI(f.last(symbol, per)) > CCI(f.last(symbol, per, -1)):
+                cci_filter_passed = 1     
+            passed_filters.append(cci_filter_passed)
 
         all_filters_passed = sum(passed_filters) == len(passed_filters)
 
@@ -196,7 +215,12 @@ def get_random_ts_params():
         'open_HAMMER': choice([True, False]),
         'open_TAIL': choice([True, False]),
         'open_BREAK': choice([True, False]),
-        'open_DOUBLE_HAMMER': choice([True, False])
+        'open_DOUBLE_HAMMER': choice([True, False]),
+        'open_C2': choice([True, False]),
+        'use_PTC2': choice([True, False]),
+        'ptc2_mix': randint(5, 90)/100,
+        'use_CCI_FILTER': choice([True, False]),
+        'cci_f_per': randint(8,20)
 
     }
 

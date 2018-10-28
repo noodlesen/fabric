@@ -65,6 +65,9 @@ class Fabric(Timeline):
     def as_list(self):
         return list(self.canvas.values())
 
+    def assets_number(self):
+        return len(self.as_list())
+
     def load_data(self, symbols, itype, timeframe):
         assets = {}
         missing = []

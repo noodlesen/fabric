@@ -6,6 +6,8 @@ from drawer import draw_candles
 def multitest(f, params, **kwargs):
     trades = []
 
+    verbose = kwargs.get('verbose', False)
+
     current_stats = []
     for i in range(f.range_from, f.range_to):
         for symbol in f.canvas.keys():
@@ -26,7 +28,7 @@ def multitest(f, params, **kwargs):
 
     total_inv = sum([t.open_price for t in closed_trades])
 
-    verbose = True
+    
 
     days_max = 0
     days_min = 10000000
@@ -47,11 +49,12 @@ def multitest(f, params, **kwargs):
     res = None
     if trades:
         i = 0
+        used_symbols=[]
         for t in trades:
-
             if t.is_closed:
                 i += 1
-
+                if t.symbol not in used_symbols:
+                    used_symbols.append(t.symbol)
                 if t.open_reason in open_reasons.keys():
                     open_reasons[t.open_reason][0] += 1
                     open_reasons[t.open_reason][1] += t.profit
@@ -134,30 +137,31 @@ def multitest(f, params, **kwargs):
 
     if res:
         res['TOTAL_INV'] = total_inv
-        res['ROI'] = res['PROFIT']/total_inv
+        res['ROI'] = res['PROFIT']/total_inv*100
+        res['VERS'] = len(used_symbols)/f.assets_number()
 
 
-    #print (res)
+    f.reset()
     return (res)
 
 
-symbols = ['KO', 'T', 'ADBE', 'INTC']
-f = Fabric()
-f.load_data(symbols, 'ASTOCKS', 'DAILY')
-f.trim()
-if f.check():
+# symbols = ['KO', 'T', 'ADBE', 'INTC']
+# f = Fabric()
+# f.load_data(symbols, 'ASTOCKS', 'DAILY')
+# f.trim()
+# if f.check():
     
-    roi = 0
-    best_params = None
-    while roi<50:
-        f.set_range_from_last(500)
-        params = TS.get_random_ts_params()
-        r = multitest(f, params, draw=False)
-        if r and r['ROI']>roi:
-            best_params = params
-            roi = r['ROI']
+#     roi = 0
+#     best_params = None
+#     while roi<50:
+#         f.set_range_from_last(500)
+#         params = TS.get_random_ts_params()
+#         r = multitest(f, params, draw=False)
+#         if r and r['ROI']>roi:
+#             best_params = params
+#             roi = r['ROI']
 
-    print(best_params)
+#     print(best_params)
 
 
 

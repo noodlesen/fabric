@@ -3,9 +3,8 @@
 from random import randint
 from copy import deepcopy
 import json
-from tester import test
 from multitester import multitest
-from assets import Asset
+#from assets import Asset
 from config import TS
 from datetime import datetime
 
@@ -70,7 +69,7 @@ def generate(f, generations_count, mutations, outsiders, depth, strategy, **kwar
 
         for x in range(0, outsiders):
             m = TS.get_random_ts_params()
-            ta = test_all(f, m, **kwargs)
+            ta = multitest(f, m, **kwargs)
             if ta:
                 offs.append({'input': m, 'output': ta})
 
@@ -81,7 +80,7 @@ def generate(f, generations_count, mutations, outsiders, depth, strategy, **kwar
                 survivor_wr = (survivor['output']['WINS'])/survivor['output']['TRADES']
 
                 if strategy == 'ROI_AND_WINRATE':
-                    cond = off['output']['ROI']*off_wr > survivor['output']['ROI']*survivor_wr
+                    cond = off['output']['ROI']*off_wr > survivor['output']['ROI']*survivor_wr and off['output']['VERS']>0.4
 
                 if cond:
                     survivor = deepcopy(off)
@@ -95,12 +94,12 @@ def generate(f, generations_count, mutations, outsiders, depth, strategy, **kwar
 
     if kwargs.get('report', False):
         
-        with open('results/'+stamp, 'w') as f:
-            f.write(json.dumps(survivor, sort_keys=True, indent=4))
+        with open('results/'+stamp, 'w') as report:
+            report.write(json.dumps(survivor, sort_keys=True, indent=4))
 
         kwargs['draw'] = True
         kwargs['verbose'] = True
-        test_all(assets, survivor['input'], **kwargs)
+        multitest(f, survivor['input'], **kwargs)
 
         print(json.dumps(survivor['output'], sort_keys=True, indent=4))
 
