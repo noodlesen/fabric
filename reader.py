@@ -15,19 +15,19 @@ def get_history_path(itype, timeframe):
     return path
 
 
-def read_av_json(path, symbol, **kwargs):
-    slice_from = kwargs.get('slice_from', 0)
-    slice_to = kwargs.get('slice_to', 0)
+def read_av_json(symbol, itype, timeframe):
+    
+    path = get_history_path(itype, timeframe)+symbol+'.json'
 
-    if slice_from == 0 and slice_to == 0:
-        cut = kwargs.get('cut', 0)
-
-    if path[-1] != '/':
-        path += '/'
-    path += symbol + '.json'
+    if itype == 'ASTOCKS':
+        if timeframe == 'DAILY':
+            k = "Time Series (Daily)"
+    elif itype == 'FX':
+        if timeframe == 'DAILY':
+            k = "Time Series FX (Daily)"
 
     with open(path, 'r') as f:
-        data = json.loads(f.read())["Time Series (Daily)"]
+        data = json.loads(f.read())[k]
 
     datalist = [{k: data[k]} for k in sorted(data.keys())]
 
@@ -35,27 +35,27 @@ def read_av_json(path, symbol, **kwargs):
     data =[]
     for d in datalist:
         k = list(d.keys())[0]
-        data.append(
-            {
-                "date": datetime.datetime.strptime(k, '%Y-%m-%d'),
-                "time": '',
-                "open": float(d[k]['1. open']),
-                "high": float(d[k]['2. high']),
-                "low": float(d[k]['3. low']),
-                "close": float(d[k]['5. adjusted close']),
-                "volume": int(d[k]['6. volume'])
-            }
-        )
 
+        bar = {
+            "open": float(d[k]['1. open']),
+            "high": float(d[k]['2. high']),
+            "low": float(d[k]['3. low']),
+        }
 
-    if slice_from or slice_to:
+        if timeframe in ['DAILY', 'WEEKLY', 'MONTHLY']:
+            bar["datetime"] = datetime.datetime.strptime(k, '%Y-%m-%d')
+        else:
+            bar["datetime"] = datetime.datetime.strptime(k, '%Y-%m-%d %H:%M:%S')
 
-        return data[slice_from: slice_to]
-    elif cut == 0:
-        return data
-    else:
-        return data[-cut:]
+        if itype == 'ASTOCKS':
+            bar["close"] = float(d[k]['5. adjusted close'])
+            bar["volume"] = int(d[k]['6. volume'])
 
+        elif itype == 'FX':
+            bar["close"] = float(d[k]['4. close'])
+            bar["volume"] = 0
+
+    return data
 
 
 
@@ -64,10 +64,17 @@ def ask_av_history(symbols, itype, timeframe):
     if itype=='ASTOCKS':
         if timeframe == 'DAILY':
             url_temp = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=%s&outputsize=full&apikey='
+    elif itype == 'FX':
+        if timeframe == 'DAILY':
+            url_temp = 'https://www.alphavantage.co/query?function=FX_DAILY&from_symbol=%s&to_symbol=%s&outputsize=full&apikey='
     SLEEP = 10
     for symbol in symbols:
         print ('requesting '+symbol)
-        url = url_temp % symbol
+        if itype == 'ASTOCKS':
+            url = url_temp % symbol
+        elif itype == 'FX':
+            url = url_temp % (symbol[:3],symbol[-3:])
+
         response = requests.request('GET',url+AV_API_KEY)
         print(response.status_code)
         if response.status_code == requests.codes.ok:

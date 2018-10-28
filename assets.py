@@ -51,11 +51,16 @@ class Asset(Timeline):
         self.data = kwargs.get('data', [])
         self.symbol = kwargs.get('symbol', None)
         self.timeframe = kwargs.get('timeframe', None)
+        self.itype = kwargs.get('itype', None)
 
-    def load_av_data(self, path, symbol):
-        self.data = read_av_json(path, symbol)
+    def __str__(self):
+        return ('Asset: %s %s (%s)' % (self.symbol, self.timeframe, self.itype))
+
+    def load_av_data(self, symbol, itype, timeframe):
+        self.data = read_av_json(symbol, itype, timeframe)
         self.symbol = symbol
-        self.timeframe = 1440
+        self.timeframe = timeframe
+        self.itype = itype
         self.count = len(self.data)
         self.reset_range()
 
