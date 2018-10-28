@@ -9,19 +9,17 @@ class Candle():
             self.open_price = bar['open']
             self.close_price = bar['close']
             self.volume = bar.get('volume', 0)
-            self.date = bar.get('date', None)
-            self.time = bar.get('time', None)
+            self.datetime = bar.get('datetime', None)
         else:
             self.high_price = kwargs['high']
             self.low_price = kwargs['low']
             self.open_price = kwargs['open']
             self.close_price = kwargs['close']
             self.volume = kwargs.get('volume', 0)
-            self.date = kwargs.get('date', None)
-            self.time = kwargs.get('time', None)
+            self.datetime = kwargs.get('datetime', None)
 
     def __str__(self):
-        return ('%s %s O:%r H:%r L: %r C: %r V: %d' % (self.date, self.time, self.open_price, self.high_price, self.low_price, self.close_price, self.volume))
+        return ('%s %s O:%r H:%r L: %r C: %r V: %d' % (self.datetime, self.open_price, self.high_price, self.low_price, self.close_price, self.volume))
 
     def get_dict(self):
         return {
@@ -114,11 +112,7 @@ class Figure():
         last = kwargs.get('last', None)
         candles = self.candles[-last:] if last else self.candles
         o = candles[0].open_price
-        try:
-            c = candles[-1].close_price
-        except:
-            print(candles)
-            input()
+        c = candles[-1].close_price
         h = max([cn.high_price for cn in candles])
         l = min([cn.low_price for cn in candles])
         return Candle(open=o, high=h, low=l, close=c)

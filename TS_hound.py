@@ -17,7 +17,7 @@ def manage(cc, f, symbol, trades, params):
                 trade.takeprofit = tp_base*params.get('tp_koef', 2.1)
 
             # FIA — low profit - good winrate
-            if params.get('use_FIA', False):
+            if not trade.is_closed and params.get('use_FIA', False):
                 fia_dmin = params.get('fia_dmin', 5)
                 fia_dmax = params.get('fia_dmax', 15)
                 fia_treshold = params.get('fia_treshold', 0.1)
@@ -70,7 +70,6 @@ def manage(cc, f, symbol, trades, params):
                     nsl = trade.stoploss*ptf+cc.low_price*(1-ptf)
                     pull = True
 
-
             if pull:
                 if nsl > trade.stoploss:
                     trade.stoploss = nsl
@@ -89,7 +88,7 @@ def open(cc, f, symbol, trades, params):
 
     open_reason = None
 
-    if True:  #ts['open'] <= params.get('max_pos', 50):    
+    if True:
 
         # TAIL
         if params.get('open_TAIL', False):
@@ -97,7 +96,6 @@ def open(cc, f, symbol, trades, params):
             if cc.low_tail()/bs > 0.2:
                 has_buy_signal = True
                 open_reason = 'TAIL_BUY'
-
 
         if f.pointer > 50:
 
@@ -145,8 +143,6 @@ def open(cc, f, symbol, trades, params):
                     high_filter_passed = 1
             passed_filters.append(high_filter_passed)
 
-
-
         all_filters_passed = sum(passed_filters) == len(passed_filters)
 
 
@@ -155,7 +151,7 @@ def open(cc, f, symbol, trades, params):
             tp_value = cc.close_price*params.get('rel_tp_k', 0.2)
 
             if has_buy_signal:
-                #if ts['open_long'] > ts['open_short'] or ts['open'] == 0:
+                
                 allowed_to_buy = True
 
             if allowed_to_buy:

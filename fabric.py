@@ -12,8 +12,6 @@ class Timeline():
         self.range_to = self.count-1
 
 
-
-
 class Fabric(Timeline):
 
     def __init__(self):
@@ -121,7 +119,14 @@ class Fabric(Timeline):
         self.reset_range()
 
     def set_range_from_last(self, n):
-        self.pointer=self.count-n
+        self.range_from=self.count-n
+        self.range_to=self.count-1
+        self.pointer = self.range_from
+
+    def reserve(self,n):
+        self.pointer = n
+        self.range_from=self.pointer
+        self.range_to=self.count-1
 
 
 
