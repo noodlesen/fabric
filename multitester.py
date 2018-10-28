@@ -115,7 +115,6 @@ def multitest(f, params, **kwargs):
 
         res = {}
 
-        #res['SYMBOL'] = trades[0].symbol
         res['PROFIT'] = sum_of_wins+sum_of_loses
         res['TRADES'] = number_of_trades
         res['WINS'] = number_of_wins
@@ -138,7 +137,7 @@ def multitest(f, params, **kwargs):
         res['ROI'] = res['PROFIT']/total_inv
 
 
-    print (res)
+    #print (res)
     return (res)
 
 
