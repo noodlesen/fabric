@@ -9,30 +9,29 @@ import os
 
 
 def get_history_path(itype, timeframe):
-    path =  'HD/%s/%s/' % (itype,timeframe)
+    path = 'HD/%s/%s/' % (itype, timeframe)
     if not os.path.exists(path):
         os.makedirs(path)
     return path
 
 
 def read_av_json(symbol, itype, timeframe):
-    
+
     path = get_history_path(itype, timeframe)+symbol+'.json'
 
     if itype == 'ASTOCKS':
         if timeframe == 'DAILY':
-            k = "Time Series (Daily)"
+            dk = "Time Series (Daily)"
     elif itype == 'FX':
         if timeframe == 'DAILY':
-            k = "Time Series FX (Daily)"
+            dk = "Time Series FX (Daily)"
 
     with open(path, 'r') as f:
-        data = json.loads(f.read())[k]
+        data = json.loads(f.read())[dk]
 
     datalist = [{k: data[k]} for k in sorted(data.keys())]
 
-
-    data =[]
+    data = []
     for d in datalist:
         k = list(d.keys())[0]
 
@@ -55,13 +54,15 @@ def read_av_json(symbol, itype, timeframe):
             bar["close"] = float(d[k]['4. close'])
             bar["volume"] = 0
 
-    return data
+        if bar["datetime"].weekday() != 5:  # исключаем субботы (для FX)
+            data.append(bar)
 
+    return data
 
 
 def ask_av_history(symbols, itype, timeframe):
     path = get_history_path(itype, timeframe)
-    if itype=='ASTOCKS':
+    if itype == 'ASTOCKS':
         if timeframe == 'DAILY':
             url_temp = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=%s&outputsize=full&apikey='
     elif itype == 'FX':
@@ -73,9 +74,9 @@ def ask_av_history(symbols, itype, timeframe):
         if itype == 'ASTOCKS':
             url = url_temp % symbol
         elif itype == 'FX':
-            url = url_temp % (symbol[:3],symbol[-3:])
+            url = url_temp % (symbol[:3], symbol[-3:])
 
-        response = requests.request('GET',url+AV_API_KEY)
+        response = requests.request('GET', url+AV_API_KEY)
         print(response.status_code)
         if response.status_code == requests.codes.ok:
             print ('OK')
@@ -87,17 +88,11 @@ def ask_av_history(symbols, itype, timeframe):
             print()
 
 
-def ask_av_indi(s,i):
-    url="https://www.alphavantage.co/query?function=%s&symbol=%s&interval=daily&time_period=10&apikey=" % (i,s)
-    response = requests.request('GET',url+AV_API_KEY)
+def ask_av_indi(s, i):
+    url = "https://www.alphavantage.co/query?function=%s&symbol=%s&interval=daily&time_period=10&apikey=" % (i, s)
+    response = requests.request('GET', url+AV_API_KEY)
     print(response.status_code)
     if response.status_code == requests.codes.ok:
         print ('OK')
         with open('INDI/'+s+i+'.json', 'w') as f:
             f.write(response.text)
-
-
-
-
-
-

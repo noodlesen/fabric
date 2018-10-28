@@ -52,18 +52,33 @@ class Asset(Timeline):
         self.symbol = kwargs.get('symbol', None)
         self.timeframe = kwargs.get('timeframe', None)
         self.itype = kwargs.get('itype', None)
+        self.loaded = False
+        self.count = 0
+        self.dt_from = None
+        self.dt_to = None
 
     def __str__(self):
-        return ('Asset: %s %s (%s)' % (self.symbol, self.timeframe, self.itype))
+        f = datetime.datetime.strftime(self.dt_from, '%Y-%m-%d %H:%M:%S')
+        t = datetime.datetime.strftime(self.dt_to, '%Y-%m-%d %H:%M:%S')
+        return ('Asset: %s %s (%s) %s->%s' % (self.symbol, self.timeframe, self.itype, f, t))
 
     def load_av_data(self, symbol, itype, timeframe):
         self.data = read_av_json(symbol, itype, timeframe)
+        self.dt_from = self.data[0]['datetime']
+        self.dt_to = self.data[self.count-1]['datetime']
         self.symbol = symbol
         self.timeframe = timeframe
         self.itype = itype
         self.count = len(self.data)
         self.reset_range()
+        self.loaded = True
 
+    def trim(self, from_dt, to_dt):
+        self.data = [d for d in self.data if d["datetime"] >= from_dt and d["datetime"] <= to_dt]
+        self.count = len(self.data)
+        self.dt_from = self.data[0]['datetime']
+        self.dt_to = self.data[self.count-1]['datetime']
+        self.reset_range()
 
     def last(self, n, of=0, **kwargs):
         of = abs(of)
