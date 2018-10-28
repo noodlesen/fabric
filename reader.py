@@ -7,6 +7,9 @@ from time import sleep
 import datetime
 import os
 
+def load_settings_from_report(path):
+    with open(path, 'r') as f:
+        return json.loads(f.read())['input']
 
 def get_history_path(itype, timeframe):
     path = 'HD/%s/%s/' % (itype, timeframe)
