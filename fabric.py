@@ -6,14 +6,17 @@ from datetime import datetime
 class Fabric():
 
     def __init__(self):
-        self.canvas = []
+        self.canvas = {}
         self.helpers = []
         self.timeframe = None
         self.checked = False
         self.loaded = False
 
+    def as_list(self):
+        return list(self.canvas.values())
+
     def load_data(self, symbols, itype, timeframe):
-        assets = []
+        assets = {}
         missing = []
         for s in symbols:
             a = Asset()
@@ -22,7 +25,7 @@ class Fabric():
             except FileNotFoundError:
                 missing.append(s)
             else:
-                assets.append(a)
+                assets[s] = a
 
         if missing:
             print ('Missing: ', ', '.join(missing))
@@ -34,41 +37,46 @@ class Fabric():
                 except FileNotFoundError:
                     print('DATA LOADING ERROR')
                 else:
-                    assets.append(a)
+                    assets[m] = a
 
         self.timeframe = timeframe
         self.loaded = True
-        self.canvas = assets
-        return (assets)
+        self.canvas.update(assets)
 
     def trim(self):
-        max_dt_from = max([a.dt_from for a in self.canvas])
-        min_dt_to = min([a.dt_to for a in self.canvas])
-        for a in self.canvas:
+        max_dt_from = max([a.dt_from for a in self.as_list()])
+        min_dt_to = min([a.dt_to for a in self.as_list()])
+        for a in self.as_list():
             a.trim(max_dt_from, min_dt_to)
 
     def check(self):  # checks canvas integrity
         ok = True
-        if len(set([a.count for a in self.canvas]))!=1:
+        if len(set([a.count for a in self.as_list()]))!=1:
             ok = False
         else:
-            for i in range(max([len(a.data) for a in self.canvas])):
-                if len(set([a.data[i]["datetime"] for a in self.canvas]))!=1:
+            for i in range(max([len(a.data) for a in self.as_list()])):
+                if len(set([a.data[i]["datetime"] for a in self.as_list()]))!=1:
                     ok=False
         print(ok)
+
+    def test(self):
+        for i in range(10):
+            for a in self.as_list():
+                print(a.data[i])
 
 
 
 f = Fabric()
-f.load_data(['GBPUSD', 'USDJPY', 'EURUSD'], 'FX', 'DAILY')
-#f.load_data(['KO','F','T', 'INTC', 'AA'], 'ASTOCKS', 'DAILY')
-for a in f.canvas:
+#f.load_data(['GBPUSD', 'USDJPY', 'EURUSD'], 'FX', 'DAILY')
+f.load_data(['KO','F','T', 'INTC', 'AA'], 'ASTOCKS', 'DAILY')
+for a in f.as_list():
     print(len(a.data))
-#f.trim()
+f.trim()
 
-for a in f.canvas:
+for a in f.as_list():
     print(len(a.data))
 
 f.check()
 
+f.test()
 
