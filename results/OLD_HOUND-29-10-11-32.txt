@@ -1,0 +1,80 @@
+{
+    "input": {
+        "FTP": 0.0805,
+        "cut_mix": 0.47,
+        "cut_period": 14,
+        "cut_treshold": 0.039,
+        "f_max_per": 192,
+        "f_max_th": 0.88,
+        "fia_dmax": 30,
+        "fia_dmin": 12,
+        "fia_treshold": 0.18,
+        "init_sl_k": 0.949,
+        "max_pos": 100,
+        "open_BREAK": false,
+        "open_C2": false,
+        "open_FRACTAL": true,
+        "open_HAMMER": false,
+        "open_TAIL": false,
+        "ptbf_mix": 0.68,
+        "ptc2_mix": 0.14,
+        "ptdj_mix": 0.48,
+        "pth_mix": 0.24,
+        "ptss_mix": 0.14,
+        "pttf_mix": 0.55,
+        "rel_tp_k": 0.978,
+        "tp_koef": 3.1,
+        "trade_short": true,
+        "use_BREAKEVEN": true,
+        "use_CUT": false,
+        "use_FIA": false,
+        "use_FILTERS": false,
+        "use_FLIP": true,
+        "use_FTP": true,
+        "use_PTBF": false,
+        "use_PTC2": false,
+        "use_PTDJ": true,
+        "use_PTH": false,
+        "use_PTSS": false,
+        "use_PTTF": false
+    },
+    "output": {
+        "AVG_LOSS": -0.055,
+        "AVG_WIN": 0.6156692913385826,
+        "CLOSE_REASONS": {
+            "SL": [
+                60,
+                0.3200000000000002
+            ],
+            "TP": [
+                67,
+                76.7
+            ]
+        },
+        "DAYS_MAX": 306,
+        "DAYS_MIN": 2,
+        "LOSES": 2,
+        "MAX_LOSES_IN_A_ROW": 1,
+        "MAX_LOSS_PER_TRADE": -0.06,
+        "MAX_PROFIT_PER_TRADE": 1.22,
+        "MAX_WINS_IN_A_ROW": 73,
+        "OPEN_REASONS": {
+            "FRAC_BUY": [
+                60,
+                0.3200000000000002
+            ],
+            "FRAC_SELL": [
+                67,
+                76.7
+            ]
+        },
+        "PROFIT": 78.08,
+        "ROI": 51.74935760675127,
+        "TOTAL_INV": 150.88110000000003,
+        "TRADES": 134,
+        "VERS": 1.0,
+        "WINRATE": 0.9477611940298507,
+        "WINS": 127,
+        "WINS_TO_LOSES": 63.5
+    }
+}

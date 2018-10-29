@@ -2,6 +2,8 @@ from assets import Asset
 from reader import ask_av_history
 from candlesticks import Candle, Figure
 from datetime import datetime
+from drawer import draw_candles
+
 
 class Timeline():
     def __init__(self):
@@ -131,8 +133,6 @@ class Fabric(Timeline):
         self.range_from=self.pointer
         self.range_to=self.count-1
 
-
-
     ## methods from asset VVV
     def last(self, symbol, n, of=0, **kwargs): 
         of = abs(of)
@@ -155,23 +155,12 @@ class Fabric(Timeline):
         return Candle(bar=self.canvas[symbol].data[self.pointer + n])
 
 
-
-
-# f = Fabric()
-# #f.load_data(['GBPUSD', 'USDJPY', 'EURUSD'], 'FX', 'DAILY')
-# f.load_data(['KO','F','T', 'INTC', 'AA'], 'ASTOCKS', 'DAILY')
-# for a in f.as_list():
-#     print(len(a.data))
-# f.trim()
-
-# for a in f.as_list():
-#     print(len(a.data))
-
-# print(f.check())
-
-# f.cut_last(50)
-
-# for a in f.as_list():
-#     print(len(a.data))
-
-
+    def draw(self, symbol, dt_from, dt_to):
+        data = [b for b in self.canvas[symbol].data if b['datetime']>=dt_from and b['datetime']<= dt_to]
+        context = {
+            'number': len(data),
+            'width': 1400,
+            'height': 800,
+            'offset': 0
+        }
+        draw_candles(data, 'images/'+symbol+'candles', context)

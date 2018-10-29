@@ -22,13 +22,14 @@ symbols.extend(TRENDY)
 # symbols.extend(OTHER2)
 # symbols.extend(NEW)
 
-GENERATIONS_COUNT = 50
+GENERATIONS_COUNT = 30
 MUTATIONS = 70
 OUTSIDERS = 5
 DEPTH = 10
 STRATEGY = 'ROI_AND_WINRATE'
 
 f = Fabric()
+#f.load_data(['EURUSD'], 'FX', 'DAILY')
 f.load_data(symbols, 'ASTOCKS', 'DAILY')
 f.trim()
 f.set_range_from_last(500)

@@ -2,13 +2,14 @@ from termcolor import colored
 from config import TS
 from fabric import Fabric
 from drawer import draw_candles
+from reader import load_settings_from_report
 
 def multitest(f, params, **kwargs):
     trades = []
 
     verbose = kwargs.get('verbose', False)
 
-    current_stats = []
+    current_dd = []
     for i in range(f.range_from, f.range_to):
         for symbol in f.canvas.keys():
             cc = f.get(symbol)
@@ -16,6 +17,8 @@ def multitest(f, params, **kwargs):
             trade = TS.open(cc, f, symbol, trades, params)
             if trade:
                 trades.append(trade)
+        current_dd.append(sum([t.profit for t in trades if t.is_open and t.profit]))
+
 
         f.next()
 
@@ -31,7 +34,7 @@ def multitest(f, params, **kwargs):
     
 
     days_max = 0
-    days_min = 10000000
+    days_min = 10000000 ###  переписать
     number_of_wins = 0
     number_of_loses = 0
     max_loses_in_a_row = 0
@@ -134,34 +137,27 @@ def multitest(f, params, **kwargs):
         res['DAYS_MIN'] = days_min
         res['OPEN_REASONS'] = open_reasons
         res['CLOSE_REASONS'] = close_reasons
-
-    if res:
-        res['TOTAL_INV'] = total_inv
-        res['ROI'] = res['PROFIT']/total_inv*100
         res['VERS'] = len(used_symbols)/f.assets_number()
+        res['DD'] = min(current_dd)
+
+
+        res['TOTAL_INV'] = total_inv
+        res['ROI'] = res['PROFIT']/total_inv*100 if total_inv else 0
 
 
     f.reset()
     return (res)
 
 
-# symbols = ['KO', 'T', 'ADBE', 'INTC']
+# symbols = ['BA', 'ADBE', 'CAT', 'INTC', 'AAPL']
 # f = Fabric()
 # f.load_data(symbols, 'ASTOCKS', 'DAILY')
 # f.trim()
 # if f.check():
-    
-#     roi = 0
-#     best_params = None
-#     while roi<50:
-#         f.set_range_from_last(500)
-#         params = TS.get_random_ts_params()
-#         r = multitest(f, params, draw=False)
-#         if r and r['ROI']>roi:
-#             best_params = params
-#             roi = r['ROI']
 
-#     print(best_params)
+#     f.set_range_from_last(500)
+#     params = load_settings_from_report('results/TRENDY109.txt')
+#     r = multitest(f, params, draw=True, verbose=True)
 
 
 

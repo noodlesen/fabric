@@ -50,7 +50,7 @@ def generate(f, generations_count, mutations, outsiders, depth, strategy, **kwar
         "WINS_TO_LOSES": 0
     }
 
-    initial = kwargs.get('initial_params', TS.get_random_ts_params())
+    initial = kwargs.get('initial_params', None)
     initial_result = multitest(f, initial, **kwargs)
     if initial_result is None:
         initial_result = default_ir
@@ -81,6 +81,13 @@ def generate(f, generations_count, mutations, outsiders, depth, strategy, **kwar
 
                 if strategy == 'ROI_AND_WINRATE':
                     cond = off['output']['ROI']*off_wr > survivor['output']['ROI']*survivor_wr and off['output']['VERS']>0.4
+
+                if strategy == 'FX':
+                    off_dd = off['output']['DD']
+                    sur_dd = survivor['output']['DD']
+                    off_dd_k = abs(off_dd) if off_dd < 0 else 1
+                    sur_dd_k = abs(sur_dd) if sur_dd < 0 else 1
+                    cond = off['output']['ROI']*off_wr/off_dd_k > survivor['output']['ROI']*survivor_wr/sur_dd_k
 
                 if cond:
                     survivor = deepcopy(off)

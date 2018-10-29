@@ -18,7 +18,9 @@ def get_history_path(itype, timeframe):
     return path
 
 
-def read_av_json(symbol, itype, timeframe):
+def read_av_json(symbol, itype, timeframe, **kwargs):
+
+    adj = kwargs.get('adjusted', False)
 
     path = get_history_path(itype, timeframe)+symbol+'.json'
 
@@ -50,8 +52,12 @@ def read_av_json(symbol, itype, timeframe):
             bar["datetime"] = datetime.datetime.strptime(k, '%Y-%m-%d %H:%M:%S')
 
         if itype == 'ASTOCKS':
-            bar["close"] = float(d[k]['5. adjusted close'])
-            bar["volume"] = int(d[k]['6. volume'])
+            if adj:
+                bar["close"] = float(d[k]['5. adjusted close'])
+                bar["volume"] = int(d[k]['6. volume'])
+            else:
+                bar["close"] = float(d[k]['4. close'])
+                bar["volume"] = int(d[k]['5. volume'])
 
         elif itype == 'FX':
             bar["close"] = float(d[k]['4. close'])
@@ -63,15 +69,19 @@ def read_av_json(symbol, itype, timeframe):
     return data
 
 
-def ask_av_history(symbols, itype, timeframe):
+def ask_av_history(symbols, itype, timeframe, **kwargs):
     path = get_history_path(itype, timeframe)
     if itype == 'ASTOCKS':
         if timeframe == 'DAILY':
-            url_temp = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=%s&outputsize=full&apikey='
+            adj = kwargs.get('adjusted', False)
+            if adj:
+                url_temp = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=%s&outputsize=full&apikey='
+            else:
+                url_temp = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=%s&outputsize=full&apikey='
     elif itype == 'FX':
         if timeframe == 'DAILY':
             url_temp = 'https://www.alphavantage.co/query?function=FX_DAILY&from_symbol=%s&to_symbol=%s&outputsize=full&apikey='
-    SLEEP = 10
+    SLEEP = 12
     for symbol in symbols:
         print ('requesting '+symbol)
         if itype == 'ASTOCKS':
