@@ -75,6 +75,7 @@ class Trade():
                 self.drawdown = self.open_price - min([d['low'] for d in self.data])
             elif self.direction == 'SELL':
                 self.profit = -1*delta
+                self.drawdown = max([d['high'] for d in self.data])-self.open_price
 
         self.is_open = False
         self.is_closed = True
@@ -96,10 +97,16 @@ class Trade():
         if this_day.low_price < self.low:
             self.low = this_day.low_price
 
-        if this_day.low_price <= self.stoploss:
-            self.close_trade(this_day, self.stoploss, 'SL')
-        if this_day.high_price >= self.takeprofit:
-            self.close_trade(this_day, self.takeprofit, 'TP')
+        if self.direction == 'BUY':
+            if this_day.low_price <= self.stoploss:
+                self.close_trade(this_day, self.stoploss, 'SL')
+            if this_day.high_price >= self.takeprofit:
+                self.close_trade(this_day, self.takeprofit, 'TP')
+        elif self.direction == 'SELL':
+            if this_day.high_price >= self.stoploss:
+                self.close_trade(this_day, self.stoploss, 'SL')
+            if this_day.low_price <= self.takeprofit:
+                self.close_trade(this_day, self.takeprofit, 'TP')
 
         if not self.is_closed:
             self.profit = this_day.close_price - self.open_price

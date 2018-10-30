@@ -22,14 +22,15 @@ symbols.extend(TRENDY)
 # symbols.extend(OTHER2)
 #symbols.extend(NEW)
 
-GENERATIONS_COUNT = 15
+GENERATIONS_COUNT = 50
 MUTATIONS = 70
 OUTSIDERS = 5
 DEPTH = 10
-STRATEGY = 'ROI_AND_WINRATE'
+#STRATEGY = 'FX'
+#STRATEGY = 'ROI_AND_WINRATE'
 
 f = Fabric()
-#f.load_data(['EURUSD'], 'FX', 'DAILY')
+#f.load_data(['USDJPY'], 'FX', 'DAILY')
 f.load_data(['ADBE', 'KO', 'CAT', 'T'], 'ASTOCKS', 'DAILY')
 f.trim()
 f.set_range_from_last(500)

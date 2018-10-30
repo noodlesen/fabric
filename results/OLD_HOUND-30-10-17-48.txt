@@ -1,0 +1,90 @@
+{
+    "input": {
+        "FTP": 0.078,
+        "cci_f_per": 18,
+        "cut_mix": 0.78,
+        "cut_period": 4,
+        "cut_treshold": 0.006,
+        "dh_fast": 2,
+        "dh_slow": 24,
+        "f_max_per": 153,
+        "f_max_th": 0.81,
+        "fia_dmax": 47,
+        "fia_dmin": 10,
+        "fia_treshold": 0.06,
+        "hf_max_per": 117,
+        "hf_max_th": 0.95,
+        "init_sl_k": 0.999,
+        "max_pos": 100,
+        "open_BREAK": false,
+        "open_C2": false,
+        "open_DOUBLE_HAMMER": true,
+        "open_FRACTAL": false,
+        "open_HAMMER": true,
+        "open_TAIL": false,
+        "ptbf_mix": 0.64,
+        "ptc2_mix": 0.88,
+        "ptdj_mix": 0.15,
+        "pth_mix": 0.8,
+        "ptss_mix": 0.17,
+        "pttf_mix": 0.37,
+        "rel_tp_k": 0.99,
+        "tp_koef": 1.0,
+        "trade_short": true,
+        "use_BREAKEVEN": true,
+        "use_CCI_FILTER": false,
+        "use_CUT": false,
+        "use_FIA": true,
+        "use_FILTERS": false,
+        "use_FLIP": true,
+        "use_FTP": false,
+        "use_HIGH_FILTER": false,
+        "use_PTBF": false,
+        "use_PTC2": false,
+        "use_PTDJ": true,
+        "use_PTH": false,
+        "use_PTSS": false,
+        "use_PTTF": false
+    },
+    "output": {
+        "AVG_LOSS": -0.5036406250000018,
+        "AVG_WIN": 67.59631588888888,
+        "CLOSE_REASONS": {
+            "SL": [
+                14,
+                -6.859076000000044
+            ],
+            "TP": [
+                60,
+                4055.262453333333
+            ]
+        },
+        "DAYS_AVG": 2.6184210526315788,
+        "DAYS_MAX": 5,
+        "DAYS_MIN": 2,
+        "LOSES": 16,
+        "MAX_DRAWDOWN": 1.2620000000000005,
+        "MAX_LOSES_IN_A_ROW": 3,
+        "MAX_LOSS_PER_TRADE": -0.8913200000000074,
+        "MAX_PROFIT_PER_TRADE": 112.75407,
+        "MAX_WINS_IN_A_ROW": 14,
+        "OPEN_REASONS": {
+            "HAMMER_BUY": [
+                38,
+                -2.5489166666667273
+            ],
+            "S_STAR_SELL": [
+                36,
+                3939.8584499999997
+            ]
+        },
+        "PROFIT": 4047.7207033333325,
+        "ROI": 48.093540588655806,
+        "TOTAL_INV": 8416.349999999999,
+        "TRADES": 76,
+        "VERS": 1.0,
+        "WINRATE": 0.7894736842105263,
+        "WINS": 60,
+        "WINS_TO_LOSES": 3.75
+    }
+}

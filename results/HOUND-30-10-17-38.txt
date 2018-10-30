@@ -1,0 +1,76 @@
+{
+    "input": {
+        "FTP": 0.057,
+        "cci_f_per": 14,
+        "cut_mix": 0.55,
+        "cut_period": 15,
+        "cut_treshold": 0.099,
+        "dh_fast": 2,
+        "dh_slow": 49,
+        "fia_dmax": 50,
+        "fia_dmin": 2,
+        "fia_treshold": 0.17,
+        "hf_max_per": 79,
+        "hf_max_th": 0.95,
+        "init_sl_k": 0.612,
+        "open_BREAK": false,
+        "open_C2": false,
+        "open_DOUBLE_HAMMER": true,
+        "open_FRACTAL": false,
+        "open_HAMMER": false,
+        "open_TAIL": false,
+        "ptbf_mix": 0.69,
+        "ptc2_mix": 0.09,
+        "ptdj_mix": 0.74,
+        "pth_mix": 0.71,
+        "ptss_mix": 0.21,
+        "pttf_mix": 0.39,
+        "rel_tp_k": 0.172,
+        "tp_koef": 1.7,
+        "use_BREAKEVEN": false,
+        "use_CCI_FILTER": false,
+        "use_CUT": true,
+        "use_FIA": true,
+        "use_FTP": true,
+        "use_HIGH_FILTER": true,
+        "use_PTBF": false,
+        "use_PTC2": false,
+        "use_PTDJ": false,
+        "use_PTH": true,
+        "use_PTSS": true,
+        "use_PTTF": false
+    },
+    "output": {
+        "AVG_LOSS": 0,
+        "AVG_WIN": 0.005800000000000027,
+        "CLOSE_REASONS": {
+            "FIA": [
+                0,
+                0
+            ]
+        },
+        "DAYS_AVG": 8.0,
+        "DAYS_MAX": 8,
+        "DAYS_MIN": 8,
+        "LOSES": 0,
+        "MAX_DRAWDOWN": 0.010699999999999932,
+        "MAX_LOSES_IN_A_ROW": 0,
+        "MAX_LOSS_PER_TRADE": 0,
+        "MAX_PROFIT_PER_TRADE": 0.005800000000000027,
+        "MAX_WINS_IN_A_ROW": 1,
+        "OPEN_REASONS": {
+            "DOUBLE_HAMMER": [
+                0,
+                0
+            ]
+        },
+        "PROFIT": 0.005800000000000027,
+        "ROI": 0.49862448418157046,
+        "TOTAL_INV": 1.1632,
+        "TRADES": 1,
+        "VERS": 1.0,
+        "WINRATE": 1.0,
+        "WINS": 1,
+        "WINS_TO_LOSES": null
+    }
+}

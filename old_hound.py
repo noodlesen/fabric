@@ -7,105 +7,107 @@ TS_NAME = 'OLD_HOUND'
 def ts_name():
     return (TS_NAME)
 
-def manage(candle, fb, symbol, trades, params):
+def manage(candle, fb, symbol, all_trades, params):
+    trades = [t for t in all_trades if t.symbol == symbol and t.is_open]
     for trade in trades:
-        if trade.is_open:
-            trade.update_trade(candle)
+        trade.update_trade(candle)
 
-            if not trade.is_closed:
-                if trade.direction == 'BUY':
-                    tp_base = sum([d['high'] for d in trade.data])/len(trade.data)
-                    trade.takeprofit = tp_base*params.get('tp_koef', 2.1)
-                elif trade.direction == 'SELL':
-                    tp_base = sum([d['low'] for d in trade.data])/len(trade.data)
-                    trade.takeprofit = tp_base*1/params.get('tp_koef', 2.1)
+        if not trade.is_closed:
 
-            # FIA — low profit - good winrate
-            if params.get('use_FIA', False):
-                fia_dmin = params.get('fia_dmin', 5)
-                fia_dmax = params.get('fia_dmax', 15)
-                fia_treshold = params.get('fia_treshold', 0.1)
-                if trade.days > fia_dmin and trade.days < fia_dmax and (trade.profit/trade.days)/trade.open_price*100 < fia_treshold and trade.profit > 0:
-                    trade.close_trade(candle, candle.close_price, 'FIA')
+            if trade.direction == 'BUY':
+                tp_base = sum([d['high'] for d in trade.data])/len(trade.data)
+                trade.takeprofit = tp_base*params.get('tp_koef', 2.1)
+            elif trade.direction == 'SELL':
+                tp_base = sum([d['low'] for d in trade.data])/len(trade.data)
+                trade.takeprofit = tp_base/params.get('tp_koef', 2.1)
 
-            #BREAKEVEN
-            if not trade.is_closed and params.get('use_BREAKEVEN', False):
-                if trade.direction == 'BUY' and trade.stoploss < trade.open_price and candle.low_price > trade.open_price:
-                    trade.stoploss = candle.low_price
-                if trade.direction == 'SELL' and trade.stoploss > trade.open_price and candle.high_price < trade.open_price:
-                    trade.stoploss = candle.high_price
 
-            #FORCE TAKE PROFIT
-            if not trade.is_closed and params.get('use_FTP', False):
-                if (trade.profit/trade.days)/trade.open_price > params.get('FTP', 0.01):
-                    trade.close_trade(candle, candle.close_price, 'FTP')
+        # FIA — low profit - good winrate
+        if params.get('use_FIA', False):
+            fia_dmin = params.get('fia_dmin', 5)
+            fia_dmax = params.get('fia_dmax', 15)
+            fia_treshold = params.get('fia_treshold', 0.1)
+            if trade.days > fia_dmin and trade.days < fia_dmax and (trade.profit/trade.days)/trade.open_price*100 < fia_treshold and trade.profit > 0:
+                trade.close_trade(candle, candle.close_price, 'FIA')
 
-            # PULL TO HAMMER/DOJI/SHOOTING STAR
-            pull = False
-            if not trade.is_closed:
+        #BREAKEVEN
+        if not trade.is_closed and params.get('use_BREAKEVEN', False):
+            if trade.direction == 'BUY' and trade.stoploss < trade.open_price and candle.low_price > trade.open_price:
+                trade.stoploss = candle.low_price
+            if trade.direction == 'SELL' and trade.stoploss > trade.open_price and candle.high_price < trade.open_price:
+                trade.stoploss = candle.high_price
 
-                if candle.is_hammer():
-                    if params.get('use_PTH', False):
-                        pth = params.get('pth_mix', 0.25)
-                        if trade.direction == 'BUY':
-                            nsl = trade.stoploss*pth+candle.low_price*(1-pth)
-                        elif trade.direction == 'SELL':
-                            nsl = trade.stoploss*pth+candle.high_price*(1-pth)
-                        pull = True
+        #FORCE TAKE PROFIT
+        if not trade.is_closed and params.get('use_FTP', False):
+            if (trade.profit/trade.days)/trade.open_price > params.get('FTP', 0.01):
+                trade.close_trade(candle, candle.close_price, 'FTP')
 
-                if candle.is_shooting_star():
-                    if params.get('use_PTSS', False):
-                        ptss = params.get('ptss_mix', 0.25)
-                        if trade.direction == 'BUY':
-                            nsl = trade.stoploss*ptss+candle.low_price*(1-ptss)
-                        elif trade.direction == 'SELL':
-                            nsl = trade.stoploss*ptss+candle.high_price*(1-ptss)
-                        pull = True
+        # PULL TO HAMMER/DOJI/SHOOTING STAR
+        pull = False
+        if not trade.is_closed:
 
-                if candle.is_doji():
-                    if params.get('use_PTDJ', False):
-                        ptdj = params.get('ptdj_mix', 0.25)
-                        if trade.direction == 'BUY':
-                            nsl = trade.stoploss*ptdj+candle.low_price*(1-ptdj)
-                        if trade.direction == 'SELL':
-                            nsl = trade.stoploss*ptdj+candle.high_price*(1-ptdj)
-                        pull = True
-
-            if fb.pointer > 5 and params.get('use_PTTF', False):
-                f = fb.last(symbol, 5, figure=True)
-                if f.is_top_fractal():
-                    ptf = params.get('pttf_mix', 0.25)
+            if candle.is_hammer():
+                if params.get('use_PTH', False):
+                    pth = params.get('pth_mix', 0.25)
                     if trade.direction == 'BUY':
-                        nsl = trade.stoploss*ptf+candle.low_price*(1-ptf)
+                        nsl = trade.stoploss*pth+candle.low_price*(1-pth)
                     elif trade.direction == 'SELL':
-                        nsl = trade.stoploss*ptf+candle.high_price*(1-ptf)
+                        nsl = trade.stoploss*pth+candle.high_price*(1-pth)
                     pull = True
 
-            if fb.pointer > 5 and params.get('use_PTBF', False):
-                f = fb.last(symbol, 5, figure=True)
-                if f.is_bottom_fractal():
-                    ptf = params.get('ptbf_mix', 0.25)
+            if candle.is_shooting_star():
+                if params.get('use_PTSS', False):
+                    ptss = params.get('ptss_mix', 0.25)
                     if trade.direction == 'BUY':
-                        nsl = trade.stoploss*ptf+candle.low_price*(1-ptf)
+                        nsl = trade.stoploss*ptss+candle.low_price*(1-ptss)
                     elif trade.direction == 'SELL':
-                        nsl = trade.stoploss*ptf+candle.high_price*(1-ptf)
+                        nsl = trade.stoploss*ptss+candle.high_price*(1-ptss)
                     pull = True
 
-            if params.get('use_PTC2', False):
-                ptf = params.get('ptc2_mix', 0.25)
-                if CCI(fb.last(symbol, 2)) < CCI(fb.last(symbol,2, -1)):
+            if candle.is_doji():
+                if params.get('use_PTDJ', False):
+                    ptdj = params.get('ptdj_mix', 0.25)
                     if trade.direction == 'BUY':
-                        nsl = trade.stoploss*ptf+candle.low_price*(1-ptf)
-                        pull = True
-                elif CCI(fb.last(symbol, 2)) > CCI(fb.last(symbol, 2, -1)):
+                        nsl = trade.stoploss*ptdj+candle.low_price*(1-ptdj)
                     if trade.direction == 'SELL':
-                        nsl = trade.stoploss*ptf+candle.high_price*(1-ptf)
-                        pull = True
+                        nsl = trade.stoploss*ptdj+candle.high_price*(1-ptdj)
+                    pull = True
 
-            if pull:
-                if (nsl > trade.stoploss and trade.direction == 'BUY') or (nsl < trade.stoploss and trade.direction == 'SELL'):
-                    trade.stoploss = nsl
-                pull = False
+        if fb.pointer > 5 and params.get('use_PTTF', False):
+            f = fb.last(symbol, 5, figure=True)
+            if f.is_top_fractal():
+                ptf = params.get('pttf_mix', 0.25)
+                if trade.direction == 'BUY':
+                    nsl = trade.stoploss*ptf+candle.low_price*(1-ptf)
+                elif trade.direction == 'SELL':
+                    nsl = trade.stoploss*ptf+candle.high_price*(1-ptf)
+                pull = True
+
+        if fb.pointer > 5 and params.get('use_PTBF', False):
+            f = fb.last(symbol, 5, figure=True)
+            if f.is_bottom_fractal():
+                ptf = params.get('ptbf_mix', 0.25)
+                if trade.direction == 'BUY':
+                    nsl = trade.stoploss*ptf+candle.low_price*(1-ptf)
+                elif trade.direction == 'SELL':
+                    nsl = trade.stoploss*ptf+candle.high_price*(1-ptf)
+                pull = True
+
+        if params.get('use_PTC2', False):
+            ptf = params.get('ptc2_mix', 0.25)
+            if CCI(fb.last(symbol, 2)) < CCI(fb.last(symbol,2, -1)):
+                if trade.direction == 'BUY':
+                    nsl = trade.stoploss*ptf+candle.low_price*(1-ptf)
+                    pull = True
+            elif CCI(fb.last(symbol, 2)) > CCI(fb.last(symbol, 2, -1)):
+                if trade.direction == 'SELL':
+                    nsl = trade.stoploss*ptf+candle.high_price*(1-ptf)
+                    pull = True
+
+        if pull:
+            if (nsl > trade.stoploss and trade.direction == 'BUY') or (nsl < trade.stoploss and trade.direction == 'SELL'):
+                trade.stoploss = nsl
+            pull = False
 
 
 def open(candle, fb, symbol, trades, params):
