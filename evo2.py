@@ -88,7 +88,7 @@ def generate(f, generations_count, mutations, outsiders, depth, strategy, **kwar
                 if strategy == 'FX':
                     off_dd = off['output']['MAX_DRAWDOWN']
                     sur_dd = survivor['output']['MAX_DRAWDOWN']
-                    cond = off['output']['ROI']*off_wr/(off_dd+0.0001) > survivor['output']['ROI']*survivor_wr/(sur_dd+0.0001)
+                    cond = off['output']['ROI']*off_wr/(off_dd+0.0001) > survivor['output']['ROI']*survivor_wr/(sur_dd+0.0001) and off['output']['VERS']>0.4
 
                 if cond:
                     survivor = deepcopy(off)

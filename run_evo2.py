@@ -26,13 +26,13 @@ GENERATIONS_COUNT = 50
 MUTATIONS = 70
 OUTSIDERS = 5
 DEPTH = 10
-#STRATEGY = 'FX'
+STRATEGY = 'FX'
 #STRATEGY = 'ROI_AND_WINRATE'
 
 f = Fabric()
-#f.load_data(['USDJPY'], 'FX', 'DAILY')
-f.load_data(['ADBE', 'KO', 'CAT', 'T'], 'ASTOCKS', 'DAILY')
+f.load_data(['GBPUSD', 'USDJPY', 'EURUSD', 'USDCHF'], 'FX', '60MIN')
+#f.load_data(['ADBE', 'KO', 'CAT', 'T'], 'ASTOCKS', 'DAILY')
 f.trim()
-f.set_range_from_last(500)
+f.set_range_from_last(240)
 if f.check():
     generate(f, GENERATIONS_COUNT, MUTATIONS, OUTSIDERS, DEPTH, STRATEGY, initial_params=initial_params, report=True)

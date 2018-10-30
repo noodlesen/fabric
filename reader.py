@@ -30,6 +30,8 @@ def read_av_json(symbol, itype, timeframe, **kwargs):
     elif itype == 'FX':
         if timeframe == 'DAILY':
             dk = "Time Series FX (Daily)"
+        if timeframe == '60MIN':
+            dk = "Time Series FX (60min)"
 
     with open(path, 'r') as f:
         data = json.loads(f.read())[dk]
@@ -81,6 +83,8 @@ def ask_av_history(symbols, itype, timeframe, **kwargs):
     elif itype == 'FX':
         if timeframe == 'DAILY':
             url_temp = 'https://www.alphavantage.co/query?function=FX_DAILY&from_symbol=%s&to_symbol=%s&outputsize=full&apikey='
+        if timeframe == '60MIN':
+            url_temp = "https://www.alphavantage.co/query?function=FX_INTRADAY&from_symbol=%s&to_symbol=%s&interval=60min&outputsize=full&apikey="
     SLEEP = 12
     for symbol in symbols:
         print ('requesting '+symbol)
