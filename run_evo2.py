@@ -6,7 +6,7 @@ from config import TS
 from fabric import Fabric 
 
 
-initial_params = load_settings_from_report('results/N101mod.txt')
+initial_params = load_settings_from_report('results/recent.txt')
 #initial_params = TS.get_random_ts_params()
 
 CHANNEL = ['DIS', 'WFC', 'VZ', 'T', 'KO']
@@ -22,7 +22,7 @@ symbols.extend(TRENDY)
 # symbols.extend(OTHER2)
 # symbols.extend(NEW)
 
-GENERATIONS_COUNT = 30
+GENERATIONS_COUNT = 100
 MUTATIONS = 70
 OUTSIDERS = 5
 DEPTH = 10

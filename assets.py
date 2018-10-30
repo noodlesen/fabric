@@ -24,12 +24,12 @@ class Asset():
 
     def load_av_data(self, symbol, itype, timeframe):
         self.data = read_av_json(symbol, itype, timeframe)
+        self.count = len(self.data)
         self.dt_from = self.data[0]['datetime']
         self.dt_to = self.data[self.count-1]['datetime']
         self.symbol = symbol
         self.timeframe = timeframe
         self.itype = itype
-        self.count = len(self.data)
         self.loaded = True
 
     def trim(self, from_dt, to_dt):

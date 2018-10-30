@@ -7,7 +7,8 @@ TS_NAME = 'HOUND'
 def ts_name():
     return (TS_NAME)
 
-def manage(cc, f, symbol, trades, params):
+def manage(cc, f, symbol, all_trades, params):
+    trades = [t for t in all_trades if t.symbol==symbol]
     for trade in trades:
         if trade.is_open:
             trade.update_trade(cc)

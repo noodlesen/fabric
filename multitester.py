@@ -9,7 +9,7 @@ def multitest(f, params, **kwargs):
 
     verbose = kwargs.get('verbose', False)
 
-    current_dd = []
+    #current_dd = []
     for i in range(f.range_from, f.range_to):
         for symbol in f.canvas.keys():
             cc = f.get(symbol)
@@ -17,19 +17,21 @@ def multitest(f, params, **kwargs):
             trade = TS.open(cc, f, symbol, trades, params)
             if trade:
                 trades.append(trade)
-        current_dd.append(sum([t.profit for t in trades if t.is_open and t.profit]))
+        #current_dd.append(sum([t.profit for t in trades if t.is_open and t.profit]))
 
 
         f.next()
 
     inst_used = []
-    closed_trades = []
-    for t in trades:
+    # closed_trades = []
+    # for t in trades:
 
-        if t.is_closed:
-            closed_trades.append(t)
+    #     if t.is_closed:
+    #         closed_trades.append(t)
 
-    total_inv = sum([t.open_price for t in closed_trades])
+    trades = [t for t in trades if t.is_closed]
+
+    total_inv = sum([t.open_price for t in trades])
 
     
 
@@ -54,59 +56,66 @@ def multitest(f, params, **kwargs):
         i = 0
         used_symbols=[]
         for t in trades:
-            if t.is_closed:
-                i += 1
-                if t.symbol not in used_symbols:
-                    used_symbols.append(t.symbol)
-                if t.open_reason in open_reasons.keys():
-                    open_reasons[t.open_reason][0] += 1
-                    open_reasons[t.open_reason][1] += t.profit
-                else:
-                    open_reasons[t.open_reason] = [0, 0]
+            i += 1
+            if t.symbol not in used_symbols:
+                used_symbols.append(t.symbol)
+            if t.open_reason in open_reasons.keys():
+                open_reasons[t.open_reason][0] += 1
+                open_reasons[t.open_reason][1] += t.profit
+            else:
+                open_reasons[t.open_reason] = [0, 0]
 
-                if t.close_reason in close_reasons.keys():
-                    close_reasons[t.close_reason][0] += 1
-                    close_reasons[t.close_reason][1] += t.profit
-                else:
-                    close_reasons[t.close_reason] = [0, 0]
+            if t.close_reason in close_reasons.keys():
+                close_reasons[t.close_reason][0] += 1
+                close_reasons[t.close_reason][1] += t.profit
+            else:
+                close_reasons[t.close_reason] = [0, 0]
 
-                if kwargs.get('draw', False):
-                    context = {
-                        'number': len(t.data),
-                        'width': 1000,
-                        'height': 500,
-                        'offset': 0
-                    }
-                    draw_candles(t.data, 'images/'+t.symbol+str(i)+'_'+t.direction+'_'+t.close_reason, context)
+            if kwargs.get('draw', False):
+                context = {
+                    'number': len(t.data),
+                    'width': 1000,
+                    'height': 500,
+                    'offset': 0
+                }
+                draw_candles(t.data, 'images/'+t.symbol+str(i)+'_'+t.direction+'_'+t.close_reason, context)
 
-                if t.days > days_max:
-                    days_max = t.days
-                if t.days < days_min:
-                    days_min = t.days
+            if t.days > days_max:
+                days_max = t.days
+            if t.days < days_min:
+                days_min = t.days
 
-                if t.profit < 0:
-                    if verbose:
-                        print(colored(t, 'red'))
-                    number_of_loses += 1
-                    current_loses_in_a_row += 1
-                    if current_wins_in_a_row > max_wins_in_a_row:
-                        max_wins_in_a_row = current_wins_in_a_row
-                    current_wins_in_a_row = 0
-                    sum_of_loses += t.profit
-                    if t.profit < max_loss_per_trade:
-                        max_loss_per_trade = t.profit
+            if t.profit < 0: # LOSS
+                if verbose:
+                    print(colored(t, 'red'))
+                number_of_loses += 1
+                current_loses_in_a_row += 1
+                if current_wins_in_a_row > max_wins_in_a_row:
+                    max_wins_in_a_row = current_wins_in_a_row
+                current_wins_in_a_row = 0
+                sum_of_loses += t.profit
+                if t.profit < max_loss_per_trade:
+                    max_loss_per_trade = t.profit
 
-                else:
-                    if verbose:
-                        print(t)
-                    number_of_wins += 1
-                    current_wins_in_a_row += 1
-                    if current_loses_in_a_row > max_loses_in_a_row:
-                        max_loses_in_a_row = current_loses_in_a_row
-                    current_loses_in_a_row = 0
-                    sum_of_wins += t.profit
-                    if t.profit > max_profit_per_trade:
-                        max_profit_per_trade = t.profit
+            else:
+                if verbose: # PROFIT
+                    print(t)
+                number_of_wins += 1
+                current_wins_in_a_row += 1
+                if current_loses_in_a_row > max_loses_in_a_row:
+                    max_loses_in_a_row = current_loses_in_a_row
+                current_loses_in_a_row = 0
+                sum_of_wins += t.profit
+                if t.profit > max_profit_per_trade:
+                    max_profit_per_trade = t.profit
+
+
+        # DRY! 
+        if current_wins_in_a_row > max_wins_in_a_row:
+            max_wins_in_a_row = current_wins_in_a_row
+        if current_loses_in_a_row > max_loses_in_a_row:
+            max_loses_in_a_row = current_loses_in_a_row
+
 
         number_of_trades = len(trades)
         if number_of_loses:
@@ -138,7 +147,7 @@ def multitest(f, params, **kwargs):
         res['OPEN_REASONS'] = open_reasons
         res['CLOSE_REASONS'] = close_reasons
         res['VERS'] = len(used_symbols)/f.assets_number()
-        res['DD'] = min(current_dd)
+        #res['DD'] = min(current_dd)
 
 
         res['TOTAL_INV'] = total_inv
@@ -147,17 +156,5 @@ def multitest(f, params, **kwargs):
 
     f.reset()
     return (res)
-
-
-# symbols = ['BA', 'ADBE', 'CAT', 'INTC', 'AAPL']
-# f = Fabric()
-# f.load_data(symbols, 'ASTOCKS', 'DAILY')
-# f.trim()
-# if f.check():
-
-#     f.set_range_from_last(500)
-#     params = load_settings_from_report('results/TRENDY109.txt')
-#     r = multitest(f, params, draw=True, verbose=True)
-
 
 

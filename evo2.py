@@ -51,7 +51,9 @@ def generate(f, generations_count, mutations, outsiders, depth, strategy, **kwar
     }
 
     initial = kwargs.get('initial_params', None)
+
     initial_result = multitest(f, initial, **kwargs)
+
     if initial_result is None:
         initial_result = default_ir
     survivor = {'input': initial, 'output': initial_result}
@@ -82,12 +84,12 @@ def generate(f, generations_count, mutations, outsiders, depth, strategy, **kwar
                 if strategy == 'ROI_AND_WINRATE':
                     cond = off['output']['ROI']*off_wr > survivor['output']['ROI']*survivor_wr and off['output']['VERS']>0.4
 
-                if strategy == 'FX':
-                    off_dd = off['output']['DD']
-                    sur_dd = survivor['output']['DD']
-                    off_dd_k = abs(off_dd) if off_dd < 0 else 1
-                    sur_dd_k = abs(sur_dd) if sur_dd < 0 else 1
-                    cond = off['output']['ROI']*off_wr/off_dd_k > survivor['output']['ROI']*survivor_wr/sur_dd_k
+                # if strategy == 'FX':
+                #     off_dd = off['output']['DD']
+                #     sur_dd = survivor['output']['DD']
+                #     off_dd_k = abs(off_dd) if off_dd < 0 else 1
+                #     sur_dd_k = abs(sur_dd) if sur_dd < 0 else 1
+                #     cond = off['output']['ROI']*off_wr/off_dd_k > survivor['output']['ROI']*survivor_wr/sur_dd_k
 
                 if cond:
                     survivor = deepcopy(off)
@@ -101,8 +103,10 @@ def generate(f, generations_count, mutations, outsiders, depth, strategy, **kwar
 
     if kwargs.get('report', False):
         
-        with open('results/'+stamp, 'w') as report:
-            report.write(json.dumps(survivor, sort_keys=True, indent=4))
+        names = [stamp, 'recent.txt']
+        for n in names:
+            with open('results/'+n, 'w') as report:
+                report.write(json.dumps(survivor, sort_keys=True, indent=4))
 
         kwargs['draw'] = True
         kwargs['verbose'] = True
