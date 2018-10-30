@@ -6,7 +6,7 @@ from config import TS
 from fabric import Fabric 
 
 
-initial_params = load_settings_from_report('results/recent.txt')
+initial_params = load_settings_from_report('results/TR110.txt')
 #initial_params = TS.get_random_ts_params()
 
 CHANNEL = ['DIS', 'WFC', 'VZ', 'T', 'KO']
@@ -30,9 +30,9 @@ STRATEGY = 'FX'
 #STRATEGY = 'ROI_AND_WINRATE'
 
 f = Fabric()
-f.load_data(['GBPUSD', 'USDJPY', 'EURUSD', 'USDCHF'], 'FX', '60MIN')
-#f.load_data(['ADBE', 'KO', 'CAT', 'T'], 'ASTOCKS', 'DAILY')
+#f.load_data(['GBPUSD', 'USDJPY', 'EURUSD', 'USDCHF'], 'FX', '60MIN')
+f.load_data(symbols, 'ASTOCKS', 'DAILY')
 f.trim()
-f.set_range_from_last(240)
+f.set_range_from_last(500)
 if f.check():
     generate(f, GENERATIONS_COUNT, MUTATIONS, OUTSIDERS, DEPTH, STRATEGY, initial_params=initial_params, report=True)

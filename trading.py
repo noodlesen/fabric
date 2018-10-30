@@ -1,3 +1,5 @@
+from settings import RELATIVE
+
 class Trade():
 
     def __str__(self):
@@ -67,7 +69,6 @@ class Trade():
         self.close_price = price
         self.close_datetime = this_day.datetime
 
-        #delta = round(self.close_price - self.open_price, 2)
         delta = self.close_price - self.open_price
         if self.direction:
             if self.direction == 'BUY':
@@ -76,6 +77,9 @@ class Trade():
             elif self.direction == 'SELL':
                 self.profit = -1*delta
                 self.drawdown = max([d['high'] for d in self.data])-self.open_price
+        if RELATIVE:
+            self.profit = self.profit / self.open_price * 100
+            self.drawdown = self.drawdown / self.open_price * 100
 
         self.is_open = False
         self.is_closed = True
@@ -110,6 +114,8 @@ class Trade():
 
         if not self.is_closed:
             self.profit = this_day.close_price - self.open_price
+            if RELATIVE:
+                self.profit = self.profit / self.open_price * 100
 
 
 
