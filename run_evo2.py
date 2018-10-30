@@ -20,9 +20,9 @@ symbols.extend(TRENDY)
 #symbols.extend(CHANNEL)
 # symbols.extend(OTHER1)
 # symbols.extend(OTHER2)
-# symbols.extend(NEW)
+#symbols.extend(NEW)
 
-GENERATIONS_COUNT = 100
+GENERATIONS_COUNT = 5
 MUTATIONS = 70
 OUTSIDERS = 5
 DEPTH = 10
