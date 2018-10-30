@@ -8,79 +8,79 @@ def ts_name():
     return (TS_NAME)
 
 def manage(cc, f, symbol, all_trades, params):
-    trades = [t for t in all_trades if t.symbol==symbol]
+    trades = [t for t in all_trades if t.symbol==symbol and t.is_open]
     for trade in trades:
-        if trade.is_open:
-            trade.update_trade(cc)
+        trade.update_trade(cc)
 
-            if not trade.is_closed:
-                tp_base = sum([d['high'] for d in trade.data])/len(trade.data)
-                trade.takeprofit = tp_base*params.get('tp_koef', 2.1)
+        if not trade.is_closed:
+            tp_base = sum([d['high'] for d in trade.data])/len(trade.data)
+            tp_base = sum([d['high'] for d in trade.data])/len(trade.data)
+            trade.takeprofit = tp_base*params.get('tp_koef', 2.1)
 
-            # FIA — low profit - good winrate
-            if not trade.is_closed and params.get('use_FIA', False):
-                fia_dmin = params.get('fia_dmin', 5)
-                fia_dmax = params.get('fia_dmax', 15)
-                fia_treshold = params.get('fia_treshold', 0.1)
-                if trade.days > fia_dmin and trade.days < fia_dmax and (trade.profit/trade.days)/trade.open_price*100 < fia_treshold and trade.profit > 0:
-                    trade.close_trade(cc, cc.close_price, 'FIA')
+        # FIA — low profit - good winrate
+        if not trade.is_closed and params.get('use_FIA', False):
+            fia_dmin = params.get('fia_dmin', 5)
+            fia_dmax = params.get('fia_dmax', 15)
+            fia_treshold = params.get('fia_treshold', 0.1)
+            if trade.days > fia_dmin and trade.days < fia_dmax and (trade.profit/trade.days)/trade.open_price*100 < fia_treshold and trade.profit > 0:
+                trade.close_trade(cc, cc.close_price, 'FIA')
 
-            #BREAKEVEN
-            if not trade.is_closed and params.get('use_BREAKEVEN', False):
-                if trade.stoploss < trade.open_price and cc.low_price > trade.open_price:
-                    trade.stoploss = cc.low_price
+        #BREAKEVEN
+        if not trade.is_closed and params.get('use_BREAKEVEN', False):
+            if trade.stoploss < trade.open_price and cc.low_price > trade.open_price:
+                trade.stoploss = cc.low_price
 
-            #FORCE TAKE PROFIT
-            if not trade.is_closed and params.get('use_FTP', False):
-                if (trade.profit/trade.days)/trade.open_price > params.get('FTP', 0.01):
-                    trade.close_trade(cc, cc.close_price, 'FTP')
+        #FORCE TAKE PROFIT
+        if not trade.is_closed and params.get('use_FTP', False):
+            if (trade.profit/trade.days)/trade.open_price > params.get('FTP', 0.01):
+                trade.close_trade(cc, cc.close_price, 'FTP')
 
-            # PULL TO HAMMER/DOJI/SHOOTING STAR
+        # PULL TO HAMMER/DOJI/SHOOTING STAR
+        pull = False
+        if not trade.is_closed:
+
+            if cc.is_hammer():
+                if params.get('use_PTH', False):
+                    pth = params.get('pth_mix', 0.25)
+                    nsl = trade.stoploss*pth+cc.low_price*(1-pth)
+                    pull = True
+
+            if cc.is_shooting_star():
+                if params.get('use_PTSS', False):
+                    ptss = params.get('ptss_mix', 0.25)
+                    nsl = trade.stoploss*ptss+cc.low_price*(1-ptss)
+                    pull = True
+
+            if cc.is_doji():
+                if params.get('use_PTDJ', False):
+                    ptdj = params.get('ptdj_mix', 0.25)
+                    nsl = trade.stoploss*ptdj+cc.low_price*(1-ptdj)
+                    pull = True
+
+        if f.pointer > 5 and params.get('use_PTTF', False):
+            ff = f.last(symbol, 5, figure=True)
+            if ff.is_top_fractal():
+                ptf = params.get('pttf_mix', 0.25)
+                nsl = trade.stoploss*ptf+cc.low_price*(1-ptf)
+                pull = True
+
+        if f.pointer > 5 and params.get('use_PTBF', False):
+            ff = f.last(symbol, 5, figure=True)
+            if ff.is_bottom_fractal():
+                ptf = params.get('ptbf_mix', 0.25)
+                nsl = trade.stoploss*ptf+cc.low_price*(1-ptf)
+                pull = True
+
+        if params.get('use_PTC2', False):
+            ptf = params.get('ptc2_mix', 0.25)
+            if CCI(f.last(symbol, 2)) < CCI(f.last(symbol, 2, -1)):
+                nsl = trade.stoploss*ptf+cc.low_price*(1-ptf)
+                pull = True
+
+        if pull:
+            if nsl > trade.stoploss:
+                trade.stoploss = nsl
             pull = False
-            if not trade.is_closed:
-
-                if cc.is_hammer():
-                    if params.get('use_PTH', False):
-                        pth = params.get('pth_mix', 0.25)
-                        nsl = trade.stoploss*pth+cc.low_price*(1-pth)
-                        pull = True
-
-                if cc.is_shooting_star():
-                    if params.get('use_PTSS', False):
-                        ptss = params.get('ptss_mix', 0.25)
-                        nsl = trade.stoploss*ptss+cc.low_price*(1-ptss)
-                        pull = True
-
-                if cc.is_doji():
-                    if params.get('use_PTDJ', False):
-                        ptdj = params.get('ptdj_mix', 0.25)
-                        nsl = trade.stoploss*ptdj+cc.low_price*(1-ptdj)
-                        pull = True
-
-            if f.pointer > 5 and params.get('use_PTTF', False):
-                ff = f.last(symbol, 5, figure=True)
-                if ff.is_top_fractal():
-                    ptf = params.get('pttf_mix', 0.25)
-                    nsl = trade.stoploss*ptf+cc.low_price*(1-ptf)
-                    pull = True
-
-            if f.pointer > 5 and params.get('use_PTBF', False):
-                ff = f.last(symbol, 5, figure=True)
-                if ff.is_bottom_fractal():
-                    ptf = params.get('ptbf_mix', 0.25)
-                    nsl = trade.stoploss*ptf+cc.low_price*(1-ptf)
-                    pull = True
-
-            if params.get('use_PTC2', False):
-                ptf = params.get('ptc2_mix', 0.25)
-                if CCI(f.last(symbol, 2)) < CCI(f.last(symbol, 2, -1)):
-                    nsl = trade.stoploss*ptf+cc.low_price*(1-ptf)
-                    pull = True
-
-            if pull:
-                if nsl > trade.stoploss:
-                    trade.stoploss = nsl
-                pull = False
 
 
 def open(cc, f, symbol, trades, params):
@@ -225,5 +225,4 @@ def get_random_ts_params():
 
     }
 
-    params['max_pos'] = 100
     return params

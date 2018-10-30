@@ -1,0 +1,76 @@
+{
+    "input": {
+        "FTP": 0.2125,
+        "cci_f_per": 13,
+        "cut_mix": 0.38,
+        "cut_period": 18,
+        "cut_treshold": 0.065,
+        "dh_fast": 5,
+        "dh_slow": 46,
+        "fia_dmax": 29,
+        "fia_dmin": 10,
+        "fia_treshold": 0.12,
+        "hf_max_per": 286,
+        "hf_max_th": 0.77,
+        "init_sl_k": 0.533,
+        "max_pos": 100,
+        "open_BREAK": false,
+        "open_C2": false,
+        "open_DOUBLE_HAMMER": false,
+        "open_FRACTAL": false,
+        "open_HAMMER": false,
+        "open_TAIL": true,
+        "ptbf_mix": 0.76,
+        "ptc2_mix": 0.32,
+        "ptdj_mix": 0.19,
+        "pth_mix": 0.88,
+        "ptss_mix": 0.58,
+        "pttf_mix": 0.69,
+        "rel_tp_k": 0.895,
+        "tp_koef": 2.7,
+        "use_BREAKEVEN": false,
+        "use_CCI_FILTER": false,
+        "use_CUT": true,
+        "use_FIA": false,
+        "use_FTP": true,
+        "use_HIGH_FILTER": false,
+        "use_PTBF": false,
+        "use_PTC2": false,
+        "use_PTDJ": true,
+        "use_PTH": false,
+        "use_PTSS": true,
+        "use_PTTF": false
+    },
+    "output": {
+        "AVG_LOSS": -4.766799163179915,
+        "AVG_WIN": 45.97027465667927,
+        "CLOSE_REASONS": {
+            "SL": [
+                1278,
+                34402.360000000175
+            ]
+        },
+        "DAYS_AVG": 149.7474589523065,
+        "DAYS_MAX": 488,
+        "DAYS_MIN": 12,
+        "LOSES": 478,
+        "MAX_LOSES_IN_A_ROW": 20,
+        "MAX_LOSS_PER_TRADE": -30.82,
+        "MAX_PROFIT_PER_TRADE": 147.45,
+        "MAX_WINS_IN_A_ROW": 45,
+        "OPEN_REASONS": {
+            "TAIL_BUY": [
+                1278,
+                34402.360000000175
+            ]
+        },
+        "PROFIT": 34543.6600000001,
+        "ROI": 28.89187831922505,
+        "TOTAL_INV": 119561.83539999985,
+        "TRADES": 1279,
+        "VERS": 1.0,
+        "WINRATE": 0.6262705238467553,
+        "WINS": 801,
+        "WINS_TO_LOSES": 1.6757322175732217
+    }
+}

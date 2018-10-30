@@ -47,7 +47,8 @@ def generate(f, generations_count, mutations, outsiders, depth, strategy, **kwar
         "TRADES": 1,
         "WINRATE": 0,
         "WINS": 0,
-        "WINS_TO_LOSES": 0
+        "WINS_TO_LOSES": 0,
+        "MAX_DRAWDOWN": 0
     }
 
     initial = kwargs.get('initial_params', None)
@@ -82,7 +83,7 @@ def generate(f, generations_count, mutations, outsiders, depth, strategy, **kwar
                 survivor_wr = (survivor['output']['WINS'])/survivor['output']['TRADES']
 
                 if strategy == 'ROI_AND_WINRATE':
-                    cond = off['output']['ROI']*off_wr > survivor['output']['ROI']*survivor_wr and off['output']['VERS']>0.4
+                    cond = off['output']['ROI']*off_wr/(off['output']['MAX_DRAWDOWN']+0.0001) > survivor['output']['ROI']*survivor_wr/(survivor['output']['MAX_DRAWDOWN']+0.0001) and off['output']['VERS']>0.4
 
                 # if strategy == 'FX':
                 #     off_dd = off['output']['DD']

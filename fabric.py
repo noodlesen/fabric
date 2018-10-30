@@ -2,8 +2,7 @@ from assets import Asset
 from reader import ask_av_history
 from candlesticks import Candle, Figure
 from datetime import datetime
-from drawer import draw_candles
-
+from drawer import draw_chart
 
 class Timeline():
     def __init__(self):
@@ -163,4 +162,4 @@ class Fabric(Timeline):
             'height': 800,
             'offset': 0
         }
-        draw_candles(data, 'images/'+symbol+'candles', context)
+        draw_chart(data, 'images/'+symbol+'candles', context)

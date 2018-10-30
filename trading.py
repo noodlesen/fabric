@@ -42,9 +42,10 @@ class Trade():
         self.ticket = None
         self.magic_number = None
         self.symbol = None
+        self.drawdown = None
 
 
-    def open_trade(self, symbol, direction, daydata, price, stoploss, takeprofit, open_reason):
+    def open_trade(self, symbol, direction, this_day, price, stoploss, takeprofit, open_reason):
         self.direction = direction
         self.days += 1
         self.is_open = True
@@ -53,51 +54,55 @@ class Trade():
         self.open_reason = open_reason
         self.stoploss = stoploss
         self.takeprofit = takeprofit
-        dd = daydata.get_dict()
+        dd = this_day.get_dict()
         dd['stoploss'] = stoploss
         dd['takeprofit'] = takeprofit
         self.data.append(dd)
-        self.low = daydata.close_price
-        self.high = daydata.close_price
-        self.open_datetime = daydata.datetime
+        self.low = this_day.close_price
+        self.high = this_day.close_price
+        self.open_datetime = this_day.datetime
 
 
-    def close_trade(self, daydata, price, close_reason):
+    def close_trade(self, this_day, price, close_reason):
         self.close_price = price
-        self.close_datetime = daydata.datetime
+        self.close_datetime = this_day.datetime
 
-        delta = round(self.close_price - self.open_price, 2)
+        #delta = round(self.close_price - self.open_price, 2)
+        delta = self.close_price - self.open_price
         if self.direction:
             if self.direction == 'BUY':
                 self.profit = delta
+                self.drawdown = self.open_price - min([d['low'] for d in self.data])
             elif self.direction == 'SELL':
                 self.profit = -1*delta
 
         self.is_open = False
         self.is_closed = True
         self.close_reason = close_reason
+        
+       
 
 
-    def update_trade(self, daydata):
+    def update_trade(self, this_day):
         self.days += 1
 
-        dd = daydata.get_dict()
+        dd = this_day.get_dict()
         dd['stoploss'] = self.stoploss
         dd['takeprofit'] = self.takeprofit
         self.data.append(dd)
 
-        if daydata.high_price > self.high:
-            self.high = daydata.high_price
-        if daydata.low_price < self.low:
-            self.low = daydata.low_price
+        if this_day.high_price > self.high:
+            self.high = this_day.high_price
+        if this_day.low_price < self.low:
+            self.low = this_day.low_price
 
-        if daydata.low_price <= self.stoploss:
-            self.close_trade(daydata, self.stoploss, 'SL')
-        if daydata.high_price >= self.takeprofit:
-            self.close_trade(daydata, self.takeprofit, 'TP')
+        if this_day.low_price <= self.stoploss:
+            self.close_trade(this_day, self.stoploss, 'SL')
+        if this_day.high_price >= self.takeprofit:
+            self.close_trade(this_day, self.takeprofit, 'TP')
 
         if not self.is_closed:
-            self.profit = daydata.close_price - self.open_price
+            self.profit = this_day.close_price - self.open_price
 
 
 

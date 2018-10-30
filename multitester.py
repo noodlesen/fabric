@@ -1,15 +1,13 @@
 from termcolor import colored
 from config import TS
 from fabric import Fabric
-from drawer import draw_candles
+from drawer import draw_chart
 from reader import load_settings_from_report
 
 def multitest(f, params, **kwargs):
-    trades = []
-
     verbose = kwargs.get('verbose', False)
 
-    #current_dd = []
+    trades = []
     for i in range(f.range_from, f.range_to):
         for symbol in f.canvas.keys():
             cc = f.get(symbol)
@@ -17,26 +15,13 @@ def multitest(f, params, **kwargs):
             trade = TS.open(cc, f, symbol, trades, params)
             if trade:
                 trades.append(trade)
-        #current_dd.append(sum([t.profit for t in trades if t.is_open and t.profit]))
-
-
         f.next()
 
     inst_used = []
-    # closed_trades = []
-    # for t in trades:
-
-    #     if t.is_closed:
-    #         closed_trades.append(t)
-
     trades = [t for t in trades if t.is_closed]
 
     total_inv = sum([t.open_price for t in trades])
-
-    
-
-    days_max = 0
-    days_min = 10000000 ###  переписать
+    trade_days = []
     number_of_wins = 0
     number_of_loses = 0
     max_loses_in_a_row = 0
@@ -51,8 +36,11 @@ def multitest(f, params, **kwargs):
     open_reasons = {}
     close_reasons = {}
 
+    
+
     res = None
     if trades:
+        max_drawdown = max([t.drawdown for t in trades])
         i = 0
         used_symbols=[]
         for t in trades:
@@ -70,20 +58,17 @@ def multitest(f, params, **kwargs):
                 close_reasons[t.close_reason][1] += t.profit
             else:
                 close_reasons[t.close_reason] = [0, 0]
-
             if kwargs.get('draw', False):
                 context = {
                     'number': len(t.data),
-                    'width': 1000,
-                    'height': 500,
-                    'offset': 0
+                    'width': 1920,
+                    'height': 1080,
+                    'offset': 0,
+                    'levels': [t.open_price]
                 }
-                draw_candles(t.data, 'images/'+t.symbol+str(i)+'_'+t.direction+'_'+t.close_reason, context)
+                draw_chart(t.data, 'images/'+t.symbol+str(i)+'_'+t.direction+'_'+t.close_reason, context)
 
-            if t.days > days_max:
-                days_max = t.days
-            if t.days < days_min:
-                days_min = t.days
+            trade_days.append(t.days)
 
             if t.profit < 0: # LOSS
                 if verbose:
@@ -142,17 +127,15 @@ def multitest(f, params, **kwargs):
         res['MAX_LOSS_PER_TRADE'] = max_loss_per_trade
         res['MAX_WINS_IN_A_ROW'] = max_wins_in_a_row
         res['MAX_LOSES_IN_A_ROW'] = max_loses_in_a_row
-        res['DAYS_MAX'] = days_max
-        res['DAYS_MIN'] = days_min
+        res['DAYS_MAX'] = max(trade_days)
+        res['DAYS_MIN'] = min(trade_days)
+        res['DAYS_AVG'] = sum(trade_days)/len(trade_days)
         res['OPEN_REASONS'] = open_reasons
         res['CLOSE_REASONS'] = close_reasons
         res['VERS'] = len(used_symbols)/f.assets_number()
-        #res['DD'] = min(current_dd)
-
-
         res['TOTAL_INV'] = total_inv
         res['ROI'] = res['PROFIT']/total_inv*100 if total_inv else 0
-
+        res['MAX_DRAWDOWN'] = max_drawdown
 
     f.reset()
     return (res)

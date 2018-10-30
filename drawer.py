@@ -13,7 +13,7 @@ def get_coord(n, context):
     return (context['price_high'] - n)/(context['price_high']-context['price_low'])*context['height']
 
 
-def candle(o, h, l, c, p, context, draw, **kwargs):
+def draw_candle(o, h, l, c, p, context, draw, **kwargs):
 
     w = context['width']/context['number']
     left = w*p-w*0.8
@@ -47,78 +47,78 @@ def candle(o, h, l, c, p, context, draw, **kwargs):
                 draw.ellipse([mid-5, get_coord(m[1], context)-5, mid+5, get_coord(m[1], context)+5], 'green', 'green')
 
 
-def draw_candles(data, name, context):
+def draw_chart(data, name, context, **kwargs):
 
     context['marked_positions'] = [m[0] for m in context.get('marks', [])]
+
 
     img = Image.new('RGB', (context['width'], context['height'],), (255, 255, 255, 0))
 
     draw = ImageDraw.Draw(img)
-
-    lowest = 10000000
-    highest = 0
 
     if context['offset'] == 0:
         data_slice = data[-context['number']:]
     else:
         data_slice = data[-context['number']+context['offset']: context['offset']]
 
-    for d in data_slice:
-        #print (d)
-        if d['high'] > highest:
-            highest = d['high']
-        if d['low'] < lowest:
-            lowest = d['low']
+
+    highest = max([d['high'] for d in data_slice])
+    lowest = min([d['low'] for d in data_slice])
 
     l = len(data)
-    context['price_high'] = highest#*(1.0+l/1000)
-    context['price_low'] = lowest#*(1.0-l/1000)
+    context['price_high'] = highest
+    context['price_low'] = lowest
 
     for i, d in enumerate(data_slice):
-        candle(d['open'], d['high'], d['low'], d['close'], i+1, context, draw, sl=d.get('stoploss', None), tp=d.get('takeprofit', None))
+        draw_candle(d['open'], d['high'], d['low'], d['close'], i+1, context, draw, sl=d.get('stoploss', None), tp=d.get('takeprofit', None))
+
+    if context.get('levels', None):
+        for level in context['levels']:
+            h = context['height'] - context['height']* (level-lowest)/(highest-lowest)
+            draw.line((0, h, context['width'], h), 'green')
 
     img.save(name+'.jpg', "JPEG")
 
 
-def draw_plot(data_list, name, **kwargs):
+# def draw_plot(data_list, name, **kwargs):
 
-    if kwargs.get('parallel', False):
-        new_data_list = []
-        width = len(data_list[0])
-        for i in range(0, width):
-            new_data_list.append([])
+#     if kwargs.get('parallel', False):
+#         new_data_list = []
+#         width = len(data_list[0])
+#         for i in range(0, width):
+#             new_data_list.append([])
 
-        for w in range(0,width):
-            for i, d in enumerate(data_list):
-                new_data_list[w].append(d[w])
+#         for w in range(0,width):
+#             for i, d in enumerate(data_list):
+#                 new_data_list[w].append(d[w])
 
-        data_list = new_data_list
-        print('PARALLEL')
+#         data_list = new_data_list
+#         print('PARALLEL')
 
-    maximum = max([max(d) for d in data_list])
-    minimum = min([min(d) for d in data_list])
-    band = maximum-minimum
-    length = len(data_list[0])
-    plots = len(data_list)
-    print(maximum, minimum, band, length, plots)
+#     maximum = max([max(d) for d in data_list])
+#     minimum = min([min(d) for d in data_list])
+#     band = maximum-minimum
+#     length = len(data_list[0])
+#     plots = len(data_list)
+#     print(maximum, minimum, band, length, plots)
 
-    img_width = 1920    
-    img_height = 800
+#     img_width = 1920    
+#     img_height = 800
 
-    img = Image.new('RGB', (img_width, img_height,), (255, 255, 255, 0))
+#     img = Image.new('RGB', (img_width, img_height,), (255, 255, 255, 0))
 
-    draw = ImageDraw.Draw(img)
+#     draw = ImageDraw.Draw(img)
 
-    for p in range(0,plots):
-        color = [BLACK, RED, GREEN][p%3]
-        for i,d in enumerate(data_list[p]):
-            if i>0:
-                startX = (i-1)/length*img_width
-                endX = i/length*img_width
-                startY = (maximum-data_list[p][i-1])/band*img_height
-                endY = (maximum-d)/band*img_height
-                draw.line((startX,startY,endX, endY), fill=color, width=1)
+#     for p in range(0,plots):
+#         color = [BLACK, RED, GREEN][p%3]
+#         for i,d in enumerate(data_list[p]):
+#             if i>0:
+#                 startX = (i-1)/length*img_width
+#                 endX = i/length*img_width
+#                 startY = (maximum-data_list[p][i-1])/band*img_height
+#                 endY = (maximum-d)/band*img_height
+#                 draw.line((startX,startY,endX, endY), fill=color, width=1)
 
-    img.save(name+'.jpg', "JPEG")
+#     img.save(name+'.jpg', "JPEG")
 
 
