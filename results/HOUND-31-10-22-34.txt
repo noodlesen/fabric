@@ -1,0 +1,81 @@
+{
+    "input": {
+        "FTP": 0.2848,
+        "cci_f_per": 16,
+        "cos_f_per": 27,
+        "cos_f_val": 96,
+        "cut_mix": 0.75,
+        "cut_period": 19,
+        "cut_treshold": 0.046,
+        "dh_fast": 3,
+        "dh_slow": 24,
+        "fia_dmax": 47,
+        "fia_dmin": 6,
+        "fia_treshold": 0.02,
+        "hf_max_per": 220,
+        "hf_max_th": 0.62,
+        "init_sl_k": 0.593,
+        "open_BREAK": false,
+        "open_C2": false,
+        "open_DOUBLE_HAMMER": false,
+        "open_FRACTAL": true,
+        "open_HAMMER": false,
+        "open_TAIL": false,
+        "ptbf_mix": 0.67,
+        "ptc2_mix": 0.72,
+        "ptdj_mix": 0.75,
+        "pth_mix": 0.77,
+        "ptp_mix": 0.58,
+        "ptss_mix": 0.9,
+        "pttf_mix": 0.84,
+        "rel_tp_k": 0.715,
+        "tp_koef": 1.4,
+        "use_BREAKEVEN": false,
+        "use_CCI_FILTER": true,
+        "use_COS_FILTER": false,
+        "use_CUT": false,
+        "use_FIA": false,
+        "use_FTP": true,
+        "use_HIGH_FILTER": false,
+        "use_PTBF": false,
+        "use_PTC2": false,
+        "use_PTDJ": true,
+        "use_PTH": false,
+        "use_PTP": false,
+        "use_PTSS": false,
+        "use_PTTF": false
+    },
+    "output": {
+        "AVG_LOSS": 0,
+        "AVG_WIN": 112.55559074259592,
+        "CLOSE_REASONS": {
+            "TP": [
+                41,
+                4655.912229921424
+            ]
+        },
+        "DAYS_AVG": 255.28571428571428,
+        "DAYS_MAX": 456,
+        "DAYS_MIN": 163,
+        "LOSES": 0,
+        "MAX_DRAWDOWN": 10.549000000000007,
+        "MAX_LOSES_IN_A_ROW": 0,
+        "MAX_LOSS_PER_TRADE": 0,
+        "MAX_PROFIT_PER_TRADE": 170.52180172839533,
+        "MAX_WINS_IN_A_ROW": 42,
+        "OPEN_REASONS": {
+            "FRAC_BUY": [
+                41,
+                4655.912229921424
+            ]
+        },
+        "PROFIT": 4727.334811189029,
+        "ROI": 87.39095042137734,
+        "TOTAL_INV": 5409.410000000002,
+        "TRADES": 42,
+        "VERS": 0.8,
+        "WINRATE": 1.0,
+        "WINS": 42,
+        "WINS_TO_LOSES": null
+    }
+}

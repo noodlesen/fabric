@@ -6,8 +6,8 @@ from config import TS
 from fabric import Fabric
 
 
-#initial_params = load_settings_from_report('results/TR110.txt')
-initial_params = TS.get_random_ts_params()
+initial_params = load_settings_from_report('results/T3R158.txt')
+#initial_params = TS.get_random_ts_params()
 
 CHANNEL = ['DIS', 'WFC', 'VZ', 'T', 'KO']
 TRENDY = ['BA', 'ADBE', 'CAT', 'INTC', 'AAPL']
@@ -17,23 +17,23 @@ NEW = ['FE', 'SCI', 'GTN', 'MSGN', 'USM', 'DISCA', 'OGE', 'AROW', 'EXPO', 'TLP',
 
 symbols = []
 symbols.extend(TRENDY)
-# symbols.extend(CHANNEL)
-#symbols.extend(OTHER1)
-#symbols.extend(OTHER2)
-#symbols.extend(NEW)
+symbols.extend(CHANNEL)
+symbols.extend(OTHER1)
+symbols.extend(OTHER2)
+symbols.extend(NEW)
 
-GENERATIONS_COUNT = 2
+GENERATIONS_COUNT = 50
 MUTATIONS = 70
 OUTSIDERS = 5
 DEPTH = 10
 #STRATEGY = 'FX'
 STRATEGY = 'ROI_AND_WINRATE'
-TIME_LIMIT = None #5  # MINUTES
+TIME_LIMIT = 500 #5  # MINUTES
 
 f = Fabric()
 #f.load_data(['GBPUSD', 'USDJPY', 'EURUSD', 'USDCHF'], 'FX', '60MIN')
 f.load_data(symbols, 'ASTOCKS', 'DAILY')
 f.trim()
-f.set_range_from_last(500)
+f.set_range_from_last(750)
 if f.check():
     generate(f, GENERATIONS_COUNT, MUTATIONS, OUTSIDERS, DEPTH, STRATEGY, initial_params=initial_params, report=True, time_limit=TIME_LIMIT)

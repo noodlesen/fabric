@@ -1,6 +1,6 @@
 from trading import Trade #, close_all
 from random import randint, choice
-from indi import CCI
+from indi import CCI, SMA
 
 TS_NAME = 'HOUND'
 
@@ -71,11 +71,11 @@ def manage(cc, f, symbol, all_trades, params):
                 nsl = trade.stoploss*ptf+cc.low_price*(1-ptf)
                 pull = True
 
-        if f.pointer > 10 and params.get('use_PTP', False):
-            if f.last(symbol, 10, figure=True).is_power_growth:
-                ptf = params.get('ptp_mix', 0.5)
-                nsl = trade.stoploss*ptf+cc.low_price*(1-ptf)
-                pull = True
+        # if f.pointer > 10 and params.get('use_PTP', False):
+        #     if f.last(symbol, 10, figure=True).is_power_growth:
+        #         ptf = params.get('ptp_mix', 0.5)
+        #         nsl = trade.stoploss*ptf+cc.low_price*(1-ptf)
+        #         pull = True
 
         if params.get('use_PTC2', False):
             ptf = params.get('ptc2_mix', 0.25)
@@ -169,6 +169,22 @@ def open(cc, f, symbol, trades, params):
                 cci_filter_passed = 1     
             passed_filters.append(cci_filter_passed)
 
+        # if params.get('use_COS_FILTER', False):
+        #     cos_filter_passed = 0
+        #     per = params.get('cos_f_per', 14)
+        #     if CCI(f.last(symbol, per)) > params.get('cos_f_val', 50):
+        #         cos_filter_passed = 1     
+        #     passed_filters.append(cos_filter_passed)
+
+        if params.get('use_SMA_FILTER', False):
+            sma_filter_passed = 0
+            per1 = params.get('sma_f_per_1', 12) # 5 - 15
+            per2 = params.get('sma_f_per_2', 24) # 16 - 30
+            per3 = params.get('sma_f_per_3', 50) # 31 - 50
+            if SMA(f.last(symbol, per1)) > SMA(f.last(symbol, per2)) > SMA(f.last(symbol, per3)):
+                sma_filter_passed = 1     
+            passed_filters.append(sma_filter_passed)
+
         all_filters_passed = sum(passed_filters) == len(passed_filters)
 
 
@@ -189,7 +205,24 @@ def open(cc, f, symbol, trades, params):
 
 def get_random_ts_params():
     params = {
+
+        # INITIAL
+
         'tp_koef': randint(1, 40)/10,
+        'init_sl_k': randint(500, 999)/1000,
+        'rel_tp_k': randint(5, 1000)/1000,
+
+        # OPENING SIGNALS
+
+        'open_FRACTAL': choice([True, False]),
+        'open_HAMMER': choice([True, False]),
+        'open_TAIL': choice([True, False]),
+        'open_BREAK': choice([True, False]),
+        'open_DOUBLE_HAMMER': choice([True, False]),
+        'open_C2': choice([True, False]),
+
+        # MANAGEMENT
+
         'use_FIA': choice([True, False]),
         'use_CUT': choice([True, False]),
         'use_BREAKEVEN': choice([True, False]),
@@ -197,7 +230,6 @@ def get_random_ts_params():
         'fia_dmin': randint(2, 12),
         'fia_dmax': randint(12, 50),
         'fia_treshold': randint(2, 20)/100,
-        'init_sl_k': randint(500, 999)/1000,
         'cut_mix': randint(1, 100)/100,
         'cut_treshold': randint(1, 100)/1000,
         'cut_period': randint(1, 20),
@@ -207,7 +239,6 @@ def get_random_ts_params():
         'use_PTH': choice([True, False]),
         'use_PTSS': choice([True, False]),
         'use_PTDJ': choice([True, False]),
-        'rel_tp_k': randint(5, 1000)/1000,
         'pth_mix': randint(5, 90)/100,
         'ptss_mix': randint(5, 90)/100,
         'ptdj_mix': randint(5, 90)/100,
@@ -215,21 +246,28 @@ def get_random_ts_params():
         'ptbf_mix': randint(5, 90)/100,
         'use_PTTF': choice([True, False]),
         'use_PTBF': choice([True, False]),
+        'use_PTC2': choice([True, False]),
+        'ptc2_mix': randint(5, 90)/100,
+
+        # FILTERS
+
         'use_HIGH_FILTER': choice([True, False]),
         'hf_max_per': randint(20, 301),
         'hf_max_th': randint(50, 95)/100,
-        'open_FRACTAL': choice([True, False]),
-        'open_HAMMER': choice([True, False]),
-        'open_TAIL': choice([True, False]),
-        'open_BREAK': choice([True, False]),
-        'open_DOUBLE_HAMMER': choice([True, False]),
-        'open_C2': choice([True, False]),
-        'use_PTC2': choice([True, False]),
-        'ptc2_mix': randint(5, 90)/100,
+
         'use_CCI_FILTER': choice([True, False]),
         'cci_f_per': randint(8, 20),
-        'use_PTP': choice([True, False]),
-        'ptp_mix': randint(5, 90)/100
+
+        'use_SMA_FILTER': choice([True, False]),
+        'sma_f_per_1': randint(5, 15),
+        'sma_f_per_2': randint(15, 30),
+        'sma_f_per_3': randint(30, 50),
+        # 'use_PTP': choice([True, False]),
+        # 'ptp_mix': randint(5, 90)/100,
+        # 'use_COS_FILTER': choice([True, False]),
+        # 'cos_f_per': randint(12, 30),
+        # 'cos_f_val': randint(0, 100)
+
 
 
     }

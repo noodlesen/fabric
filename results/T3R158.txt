@@ -2,8 +2,6 @@
     "input": {
         "FTP": 0.2472,
         "cci_f_per": 17,
-        "cos_f_per": 13,
-        "cos_f_val": 52,
         "cut_mix": 0.78,
         "cut_period": 15,
         "cut_treshold": 0.092,
@@ -26,14 +24,12 @@
         "ptc2_mix": 0.63,
         "ptdj_mix": 0.25,
         "pth_mix": 0.85,
-        "ptp_mix": 0.73,
         "ptss_mix": 0.85,
         "pttf_mix": 0.65,
         "rel_tp_k": 0.562,
         "tp_koef": 1.8,
         "use_BREAKEVEN": false,
         "use_CCI_FILTER": true,
-        "use_COS_FILTER": false,
         "use_CUT": true,
         "use_FIA": false,
         "use_FTP": true,
@@ -42,10 +38,12 @@
         "use_PTC2": false,
         "use_PTDJ": false,
         "use_PTH": false,
-        "use_PTP": false,
         "use_PTSS": false,
         "use_PTTF": false,
-        "use_SMA_FILTER": false
+        "use_SMA_FILTER": false,
+        "sma_f_per_1": 12,
+        "sma_f_per_2": 24,
+        "sma_f_per_3": 50
     },
     "output": {
         "AVG_LOSS": 0,
