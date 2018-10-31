@@ -71,6 +71,12 @@ def manage(cc, f, symbol, all_trades, params):
                 nsl = trade.stoploss*ptf+cc.low_price*(1-ptf)
                 pull = True
 
+        if f.pointer > 10 and params.get('use_PTP', False):
+            if f.last(symbol, 10, figure=True).is_power_growth:
+                ptf = params.get('ptp_mix', 0.5)
+                nsl = trade.stoploss*ptf+cc.low_price*(1-ptf)
+                pull = True
+
         if params.get('use_PTC2', False):
             ptf = params.get('ptc2_mix', 0.25)
             if CCI(f.last(symbol, 2)) < CCI(f.last(symbol, 2, -1)):
@@ -221,7 +227,10 @@ def get_random_ts_params():
         'use_PTC2': choice([True, False]),
         'ptc2_mix': randint(5, 90)/100,
         'use_CCI_FILTER': choice([True, False]),
-        'cci_f_per': randint(8,20)
+        'cci_f_per': randint(8, 20),
+        'use_PTP': choice([True, False]),
+        'ptp_mix': randint(5, 90)/100
+
 
     }
 

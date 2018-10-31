@@ -148,6 +148,12 @@ class Figure():
         candles = self.candles[-5:]
         return candles[-3].low_price == min([c.low_price for c in candles])
 
+    def is_power_growth(self):
+        candles = self.candles[-10:]
+        c1 = candles[-1].is_bullish() and candles[-1].body_to_candle() > 0.9
+        #c2 = candles[-1].body_size > sum([c.body_size() for c in candles[:9]]) / 9 * 1.2
+        return c1 # and c2
+
 
 
 

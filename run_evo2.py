@@ -3,11 +3,11 @@
 from evo2 import generate
 from reader import load_settings_from_report
 from config import TS
-from fabric import Fabric 
+from fabric import Fabric
 
 
-initial_params = load_settings_from_report('results/TR110.txt')
-#initial_params = TS.get_random_ts_params()
+#initial_params = load_settings_from_report('results/TR110.txt')
+initial_params = TS.get_random_ts_params()
 
 CHANNEL = ['DIS', 'WFC', 'VZ', 'T', 'KO']
 TRENDY = ['BA', 'ADBE', 'CAT', 'INTC', 'AAPL']
@@ -22,13 +22,13 @@ symbols.extend(TRENDY)
 #symbols.extend(OTHER2)
 #symbols.extend(NEW)
 
-GENERATIONS_COUNT = 10
+GENERATIONS_COUNT = 2
 MUTATIONS = 70
 OUTSIDERS = 5
 DEPTH = 10
 #STRATEGY = 'FX'
 STRATEGY = 'ROI_AND_WINRATE'
-TIME_LIMIT = 4 #5  # MINUTES
+TIME_LIMIT = None #5  # MINUTES
 
 f = Fabric()
 #f.load_data(['GBPUSD', 'USDJPY', 'EURUSD', 'USDCHF'], 'FX', '60MIN')
