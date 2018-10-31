@@ -17,17 +17,17 @@ NEW = ['FE', 'SCI', 'GTN', 'MSGN', 'USM', 'DISCA', 'OGE', 'AROW', 'EXPO', 'TLP',
 
 symbols = []
 symbols.extend(TRENDY)
-#symbols.extend(CHANNEL)
-# symbols.extend(OTHER1)
-# symbols.extend(OTHER2)
+symbols.extend(CHANNEL)
+symbols.extend(OTHER1)
+#symbols.extend(OTHER2)
 #symbols.extend(NEW)
 
-GENERATIONS_COUNT = 50
+GENERATIONS_COUNT = 30
 MUTATIONS = 70
 OUTSIDERS = 5
 DEPTH = 10
-STRATEGY = 'FX'
-#STRATEGY = 'ROI_AND_WINRATE'
+#STRATEGY = 'FX'
+STRATEGY = 'ROI_AND_WINRATE'
 
 f = Fabric()
 #f.load_data(['GBPUSD', 'USDJPY', 'EURUSD', 'USDCHF'], 'FX', '60MIN')
