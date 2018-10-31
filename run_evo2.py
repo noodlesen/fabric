@@ -17,17 +17,18 @@ NEW = ['FE', 'SCI', 'GTN', 'MSGN', 'USM', 'DISCA', 'OGE', 'AROW', 'EXPO', 'TLP',
 
 symbols = []
 symbols.extend(TRENDY)
-symbols.extend(CHANNEL)
-symbols.extend(OTHER1)
+# symbols.extend(CHANNEL)
+#symbols.extend(OTHER1)
 #symbols.extend(OTHER2)
 #symbols.extend(NEW)
 
-GENERATIONS_COUNT = 30
+GENERATIONS_COUNT = 10
 MUTATIONS = 70
 OUTSIDERS = 5
 DEPTH = 10
 #STRATEGY = 'FX'
 STRATEGY = 'ROI_AND_WINRATE'
+TIME_LIMIT = 4 #5  # MINUTES
 
 f = Fabric()
 #f.load_data(['GBPUSD', 'USDJPY', 'EURUSD', 'USDCHF'], 'FX', '60MIN')
@@ -35,4 +36,4 @@ f.load_data(symbols, 'ASTOCKS', 'DAILY')
 f.trim()
 f.set_range_from_last(500)
 if f.check():
-    generate(f, GENERATIONS_COUNT, MUTATIONS, OUTSIDERS, DEPTH, STRATEGY, initial_params=initial_params, report=True)
+    generate(f, GENERATIONS_COUNT, MUTATIONS, OUTSIDERS, DEPTH, STRATEGY, initial_params=initial_params, report=True, time_limit=TIME_LIMIT)

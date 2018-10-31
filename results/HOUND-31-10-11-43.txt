@@ -1,0 +1,88 @@
+{
+    "input": {
+        "FTP": 0.2464,
+        "cci_f_per": 12,
+        "cut_mix": 0.24,
+        "cut_period": 8,
+        "cut_treshold": 0.044,
+        "dh_fast": 3,
+        "dh_slow": 10,
+        "fia_dmax": 45,
+        "fia_dmin": 12,
+        "fia_treshold": 0.17,
+        "hf_max_per": 107,
+        "hf_max_th": 0.75,
+        "init_sl_k": 0.611,
+        "open_BREAK": true,
+        "open_C2": false,
+        "open_DOUBLE_HAMMER": true,
+        "open_FRACTAL": true,
+        "open_HAMMER": true,
+        "open_TAIL": false,
+        "ptbf_mix": 0.68,
+        "ptc2_mix": 0.74,
+        "ptdj_mix": 0.71,
+        "pth_mix": 0.57,
+        "ptss_mix": 0.41,
+        "pttf_mix": 0.87,
+        "rel_tp_k": 0.695,
+        "tp_koef": 1.4,
+        "use_BREAKEVEN": false,
+        "use_CCI_FILTER": true,
+        "use_CUT": true,
+        "use_FIA": false,
+        "use_FTP": false,
+        "use_HIGH_FILTER": true,
+        "use_PTBF": false,
+        "use_PTC2": false,
+        "use_PTDJ": false,
+        "use_PTH": false,
+        "use_PTSS": false,
+        "use_PTTF": true
+    },
+    "output": {
+        "AVG_LOSS": -4.836581982766858,
+        "AVG_WIN": 8.985753288404679,
+        "CLOSE_REASONS": {
+            "SL": [
+                373,
+                1537.1495388643566
+            ]
+        },
+        "DAYS_AVG": 160.94117647058823,
+        "DAYS_MAX": 313,
+        "DAYS_MIN": 64,
+        "LOSES": 131,
+        "MAX_DRAWDOWN": 19.379999999999995,
+        "MAX_LOSES_IN_A_ROW": 32,
+        "MAX_LOSS_PER_TRADE": -17.07471533695876,
+        "MAX_PROFIT_PER_TRADE": 23.65029815546624,
+        "MAX_WINS_IN_A_ROW": 52,
+        "OPEN_REASONS": {
+            "BREAKUP_BUY": [
+                160,
+                594.0529984408972
+            ],
+            "DOUBLE_HAMMER": [
+                1,
+                1.5536931778620868
+            ],
+            "FRAC_BUY": [
+                142,
+                697.7554198342098
+            ],
+            "HAMMER_BUY": [
+                67,
+                220.4357189222789
+            ]
+        },
+        "PROFIT": 1549.9458093398785,
+        "ROI": 5.911079043576391,
+        "TOTAL_INV": 26221.029999999995,
+        "TRADES": 374,
+        "VERS": 1.0,
+        "WINRATE": 0.6497326203208557,
+        "WINS": 243,
+        "WINS_TO_LOSES": 1.8549618320610688
+    }
+}

@@ -6,7 +6,7 @@ import json
 from multitester import multitest
 #from assets import Asset
 from config import TS
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 def mutate(p, nm):
@@ -29,6 +29,8 @@ def mutate(p, nm):
 
 
 def generate(f, generations_count, mutations, outsiders, depth, strategy, **kwargs):
+
+    time_limit = kwargs.get('time_limit', None)
 
     now = datetime.now()
     stamp = TS.ts_name()+"-%d-%d-%d-%d.txt" % (now.day, now.month, now.hour, now.minute)
@@ -60,9 +62,12 @@ def generate(f, generations_count, mutations, outsiders, depth, strategy, **kwar
     survivor = {'input': initial, 'output': initial_result}
     print(json.dumps(survivor['input'], sort_keys=True, indent=4))
 
-    for n in range(0, generations_count):
-        print('GEN', n)
+    elapsed_times = []
 
+    for n in range(1, generations_count+1):
+        print()
+        print('GEN', n)
+        start_time = datetime.now()
         offs = []
         for d in range(0, depth):
             m = mutate(survivor['input'], mutations)
@@ -94,10 +99,31 @@ def generate(f, generations_count, mutations, outsiders, depth, strategy, **kwar
                     survivor = deepcopy(off)
 
         print(json.dumps(survivor['input'], sort_keys=True, indent=4))
-        print('>>>>')
-        print(survivor_wr)
-        print(survivor['output']['PROFIT'])
-        print(survivor['output']['ROI'])
+        print(json.dumps(survivor['output'], sort_keys=True, indent=4))
+        print('\n>>>>')
+        print('\nWINRATE','%.2f' % survivor_wr)
+        print('PROFIT', '%.2f' % survivor['output']['PROFIT'])
+        print('ROI', '%.2f' % survivor['output']['ROI'])
+        now = datetime.now()
+        elapsed = (now-start_time).total_seconds()
+        elapsed_times.append(elapsed)
+        average = sum(elapsed_times)/len(elapsed_times)
+        print('elapsed:', int(elapsed), 'average:', int(average))
+        gens_to_go = generations_count - n 
+        if time_limit:
+            if ((now-start_time)+timedelta(seconds=average)).seconds//60 > time_limit:
+                print('STOP TIME '+ datetime.strftime(now, '%H:%M'))
+                break
+            else:
+                togo = (start_time + timedelta(minutes=time_limit) - now)
+                est_gens = togo.seconds // average
+                est_gens = gens_to_go if est_gens>gens_to_go else est_gens
+                print('est. gens: ', est_gens)
+        else:
+            est_time = now+timedelta(seconds=average*gens_to_go)
+            print('est. finish: ', datetime.strftime(est_time, '%H:%M'))
+            
+        
         print()
 
     if kwargs.get('report', False):
