@@ -1,0 +1,97 @@
+{
+    "input": {
+        "FTP": 0.0415,
+        "cci_f_per": 16,
+        "cut_mix": 0.98,
+        "cut_period": 18,
+        "cut_treshold": 0.092,
+        "dh_fast": 2,
+        "dh_slow": 18,
+        "fia_dmax": 40,
+        "fia_dmin": 7,
+        "fia_treshold": 0.04,
+        "hf_max_per": 28,
+        "hf_max_th": 0.67,
+        "init_sl_k": 0.538,
+        "max_pos": 100,
+        "open_BREAK": false,
+        "open_C2": true,
+        "open_DOUBLE_HAMMER": false,
+        "open_FRACTAL": true,
+        "open_HAMMER": true,
+        "open_TAIL": false,
+        "ptbf_mix": 0.85,
+        "ptc2_mix": 0.7,
+        "ptdj_mix": 0.1,
+        "pth_mix": 0.57,
+        "ptss_mix": 0.85,
+        "pttf_mix": 0.65,
+        "rel_tp_k": 0.063,
+        "sma_f_per_1": 12,
+        "sma_f_per_2": 21,
+        "sma_f_per_3": 46,
+        "tp_koef": 1.8,
+        "use_BREAKEVEN": false,
+        "use_CCI_FILTER": true,
+        "use_CUT": true,
+        "use_FIA": false,
+        "use_FTP": true,
+        "use_HIGH_FILTER": true,
+        "use_PTBF": false,
+        "use_PTC2": false,
+        "use_PTDJ": false,
+        "use_PTH": false,
+        "use_PTSS": false,
+        "use_PTTF": false,
+        "use_SMA_FILTER": true
+    },
+    "output": {
+        "AVG_LOSS": -15.965722137037037,
+        "AVG_WIN": 112.63105730689774,
+        "CLOSE_REASONS": {
+            "FTP": [
+                0,
+                0
+            ],
+            "SL": [
+                53,
+                -833.4982754
+            ],
+            "TP": [
+                69,
+                7858.0181781628735
+            ]
+        },
+        "DAYS_AVG": 328.712,
+        "DAYS_MAX": 671,
+        "DAYS_MIN": 2,
+        "LOSES": 54,
+        "MAX_DRAWDOWN": 53.339999999999996,
+        "MAX_LOSES_IN_A_ROW": 6,
+        "MAX_LOSS_PER_TRADE": -49.0807,
+        "MAX_PROFIT_PER_TRADE": 227.74060913838161,
+        "MAX_WINS_IN_A_ROW": 14,
+        "OPEN_REASONS": {
+            "C2_BUY": [
+                87,
+                5312.911758704535
+            ],
+            "FRAC_BUY": [
+                33,
+                1458.611214612025
+            ],
+            "HAMMER_BUY": [
+                2,
+                121.62604273972622
+            ]
+        },
+        "PROFIT": 7134.65607338974,
+        "ROI": 88.58200591597083,
+        "TOTAL_INV": 8054.294999999998,
+        "TRADES": 125,
+        "VERS": 0.43243243243243246,
+        "WINRATE": 0.568,
+        "WINS": 71,
+        "WINS_TO_LOSES": 1.3148148148148149
+    }
+}
