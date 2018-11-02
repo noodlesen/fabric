@@ -6,7 +6,7 @@ from config import TS
 from fabric import Fabric
 
 
-initial_params = load_settings_from_report('results/T3R158.txt')
+initial_params = load_settings_from_report('results/P50T3Y.txt')
 #initial_params = TS.get_random_ts_params()
 
 CHANNEL = ['DIS', 'WFC', 'VZ', 'T', 'KO']
@@ -27,8 +27,8 @@ MUTATIONS = 70
 OUTSIDERS = 5
 DEPTH = 10
 #STRATEGY = 'FX'
-STRATEGY = 'ROI_AND_WINRATE'
-TIME_LIMIT = 500 #5  # MINUTES
+STRATEGY = 'PROFIT_INVEST_LIMIT'
+TIME_LIMIT =570 #5  # MINUTES
 
 f = Fabric()
 #f.load_data(['GBPUSD', 'USDJPY', 'EURUSD', 'USDCHF'], 'FX', '60MIN')

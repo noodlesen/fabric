@@ -90,6 +90,9 @@ def generate(f, generations_count, mutations, outsiders, depth, strategy, **kwar
                 if strategy == 'ROI_AND_WINRATE':
                     cond = off['output']['ROI']*off_wr/(off['output']['MAX_DRAWDOWN']+0.0001) > survivor['output']['ROI']*survivor_wr/(survivor['output']['MAX_DRAWDOWN']+0.0001) and off['output']['VERS']>0.4
 
+                if strategy == 'PROFIT_INVEST_LIMIT':
+                    cond = off['output']['PROFIT'] > survivor['output']['PROFIT'] and  off['output']['TOTAL_INV'] <=50000
+
                 if strategy == 'FX':
                     off_dd = off['output']['MAX_DRAWDOWN']
                     sur_dd = survivor['output']['MAX_DRAWDOWN']
