@@ -16,19 +16,18 @@ OTHER2 = ['EBAY', 'F', 'FB', 'GS', 'HD', 'HOG', 'HPQ', 'IBM', 'ITX', 'JNJ']
 NEW = ['FE', 'SCI', 'GTN', 'MSGN', 'USM', 'DISCA', 'OGE', 'AROW', 'EXPO', 'TLP', 'MMT', 'LION', 'ATI', 'MYGN']
 
 symbols = []
-symbols.extend(TRENDY)
-symbols.extend(CHANNEL)
-symbols.extend(OTHER1)
-symbols.extend(OTHER2)
+# symbols.extend(TRENDY)
+# symbols.extend(CHANNEL)
+# symbols.extend(OTHER1)
+# symbols.extend(OTHER2)
 symbols.extend(NEW)
 
-GENERATIONS_COUNT = 50
+GENERATIONS_COUNT = 10
 MUTATIONS = 70
 OUTSIDERS = 5
 DEPTH = 10
-#STRATEGY = 'FX'
-STRATEGY = 'PROFIT_INVEST_LIMIT'
-TIME_LIMIT =570 #5  # MINUTES
+STRATEGY = 'ROI_AND_WINRATE'
+TIME_LIMIT = 570  # 5  # MINUTES
 
 f = Fabric()
 #f.load_data(['GBPUSD', 'USDJPY', 'EURUSD', 'USDCHF'], 'FX', '60MIN')
